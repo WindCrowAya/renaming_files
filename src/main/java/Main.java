@@ -65,7 +65,7 @@ public class Main {
                 "->  add : добавляет к названиям файлов порядковый номер\n" +
                 "-> none : преобразование по умолчанию, переименовывает по каждому " +
                 "введенному расширению (вместо ввода этой команды можно нажать Enter)\n" +
-                "3. Прописывайте расширения через запятую (без пробелов!), для переименования папок введите \"folders\"\n\n" + // TODO: 28.10.2017 пофиксить пробелы
+                "3. Прописывайте расширения через запятую, для переименования папок введите \"folders\"\n\n" +
                 "Введите путь: ");
         do {
             path = reader.readLine().trim();
@@ -114,7 +114,11 @@ public class Main {
                     continue;
                 }
 
-                extensions = removeDuplicates(stringOfExtensions.split(","));
+                extensions = stringOfExtensions.split(",");
+                for (int i = 0; i < extensions.length; i++) {
+                    extensions[i] = extensions[i].trim();
+                }
+                extensions = removeDuplicates(extensions);
 
                 if (extensions.length < 1) {
                     System.out.print("Не введены расширения. Повторите ввод заново, начиная с пути: ");
