@@ -42,11 +42,16 @@ public class Main {
 
         String[] extensions = new String[0];
 
-        int countDirectories = 0,
+        int numberOfFiles,
+            numberOfFolders = 0,
+            numberOfZerosToFolders = 0,
+            numberOfZerosToFiles = 0,
+            countDirectories = 0,
             countFilesWithAnyExtension = 0,
             countFilesWithCurrentExtension;
 
         System.out.print(
+                "\n" +
                 "+--------------------------------+\n" +
                 "| Переименование файлов в папке. |\n" +
                 "+--------------------------------+\n\n" +
@@ -58,8 +63,7 @@ public class Main {
                 "->  add : добавляет к названиям файлов порядковый номер\n" +
                 "-> none : преобразование по умолчанию, переименовывает по каждому " +
                 "введенному расширению (вместо ввода этой команды можно нажать Enter)\n" +
-                "3. Прописывайте расширения через запятую, для переименования папок введите \"folders\"\n" +
-                "\n\n" +
+                "3. Прописывайте расширения через запятую, для переименования папок введите \"folders\"\n\n" +
                 "Введите путь: ");
         do {
             path = reader.readLine().trim();
@@ -119,25 +123,33 @@ public class Main {
 
             } while (pathIsEmpty || listFilesIsEmpty || stringOfExtensionsIsEmpty);
 
+        for (File file : listFiles)
+            if (file.isDirectory())
+                numberOfFolders++;
+        numberOfFiles = listFiles.length - numberOfFolders;
+        numberOfZerosToFolders = String.valueOf(numberOfFolders).length() - 1;
+        numberOfZerosToFiles = String.valueOf(numberOfFiles).length() - 1;
 
         switch (command) {
             case "all":
                 for (File file : listFiles) {
                     if (file.isDirectory()) {
-                        resultString = folder.toString() + "\\" + ++countDirectories;
+                        numberOfZerosToFolders = changeNumberOfZeros(numberOfZerosToFolders, countDirectories);
+                        resultString = folder.toString() + "\\" + addZeros(numberOfZerosToFolders) + ++countDirectories;
                         resultFile = Paths.get(resultString).toFile();
                         file.renameTo(resultFile);
                         continue;
                     }
                     fileToString = file.toString();
                     currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
-                    resultString = folder.toString() + "\\" + ++countFilesWithAnyExtension + "." + currentExtension;
+                    numberOfZerosToFiles = changeNumberOfZeros(numberOfZerosToFiles, countFilesWithAnyExtension);
+                    resultString = folder.toString() + "\\" + addZeros(numberOfZerosToFiles) + ++countFilesWithAnyExtension + "." + currentExtension;
                     resultFile = Paths.get(resultString).toFile();
                     file.renameTo(resultFile);
                 }
                 break;
 
-            case "each": /*тесты пройдены*/
+            case "each":
                 List<String> extensionsInDir = new ArrayList<>();
 
                 for (File file : listFiles) {
@@ -168,7 +180,7 @@ public class Main {
                 }
                 break;
 
-            case "add": /*тесты пройдены*/
+            case "add":
                 for (String ex : extensions) {
                     if (ex.equals("folders")) {
                         for (File file : listFiles) {
@@ -195,7 +207,7 @@ public class Main {
                 }
                 break;
 
-            default:  /*тесты пройдены*/
+            default:
                 for (String ex : extensions) {
                     if (ex.equals("folders")) {
                         for (File file : listFiles) {
@@ -234,6 +246,18 @@ public class Main {
             return (s == null) || s.equals("");
         }
 
+    private static String addZeros(int number) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < number; i++) {
+            result.append("0");
+        }
+        return result.toString();
+    }
+
+    private static int changeNumberOfZeros(int numberOfZeros, int countFilesWithSomeExtension) {
+        return String.valueOf(countFilesWithSomeExtension + 1).length() ==
+               String.valueOf(countFilesWithSomeExtension).length() + 1 ? numberOfZeros - 1 : numberOfZeros;
+    }
 
     public static void main(String[] args) {
         try {
