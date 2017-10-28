@@ -44,9 +44,13 @@ public class Main {
             numberOfFolders = 0,
             numberOfZerosToFolders,
             numberOfZerosToFiles,
+            numberOfZerosToFilesWithCurrentEx,
             countDirectories = 0,
             countFilesWithAnyExtension = 0,
             countFilesWithCurrentExtension;
+
+        //мапа с ключом - значением: "расширение - количество вхождений"
+        Map<String, Integer> extensionsInDir;
 
         System.out.print(
                 "\n" +
@@ -61,7 +65,7 @@ public class Main {
                 "->  add : добавляет к названиям файлов порядковый номер\n" +
                 "-> none : преобразование по умолчанию, переименовывает по каждому " +
                 "введенному расширению (вместо ввода этой команды можно нажать Enter)\n" +
-                "3. Прописывайте расширения через запятую, для переименования папок введите \"folders\"\n\n" +
+                "3. Прописывайте расширения через запятую (без пробелов!), для переименования папок введите \"folders\"\n\n" + // TODO: 28.10.2017 пофиксить пробелы
                 "Введите путь: ");
         do {
             path = reader.readLine().trim();
@@ -111,6 +115,9 @@ public class Main {
                 }
 
                 extensions = removeDuplicates(stringOfExtensions.split(","));
+                for (int i = 0; i < extensions.length; i++) {
+                    System.out.print(extensions[i] + " ");
+                }
 
                 if (extensions.length < 1) {
                     System.out.print("Не введены расширения. Повторите ввод заново, начиная с пути: ");
@@ -133,16 +140,16 @@ public class Main {
         switch (command) {
             case "all": //OK
                 for (File file : listFiles) {
-                    if (file.isDirectory()) {
-                        numberOfZerosToFolders = changeNumberOfZeros(numberOfZerosToFolders, countDirectories);
-                        resultString = folder.toString() + "\\" + addZeros(numberOfZerosToFolders) + ++countDirectories;
-                        resultFile = Paths.get(resultString).toFile();
-                        file.renameTo(resultFile);
-                    } else {
+                    if (!file.isDirectory()) {
                         fileToString = file.toString();
                         currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
                         numberOfZerosToFiles = changeNumberOfZeros(numberOfZerosToFiles, countFilesWithAnyExtension);
                         resultString = folder.toString() + "\\" + addZeros(numberOfZerosToFiles) + ++countFilesWithAnyExtension + "." + currentExtension;
+                        resultFile = Paths.get(resultString).toFile();
+                        file.renameTo(resultFile);
+                    } else {
+                        numberOfZerosToFolders = changeNumberOfZeros(numberOfZerosToFolders, countDirectories);
+                        resultString = folder.toString() + "\\" + addZeros(numberOfZerosToFolders) + ++countDirectories;
                         resultFile = Paths.get(resultString).toFile();
                         file.renameTo(resultFile);
                     }
@@ -150,8 +157,7 @@ public class Main {
                 break;
 
             case "each": //OK
-                //мапа с ключом - значением: "расширение - количество вхождений"
-                Map<String, Integer> extensionsInDir = new HashMap<>();
+                extensionsInDir = new HashMap<>();
 
                 //находим все расширения в папке и считаем их количество
                 for (File file : listFiles) {
@@ -166,18 +172,11 @@ public class Main {
                     }
                 }
 
-                int numberOfZerosToFilesWithCurrentEx;
-
                 for (Map.Entry<String, Integer> ex : extensionsInDir.entrySet()) {
                     countFilesWithCurrentExtension = 0;
                     numberOfZerosToFilesWithCurrentEx = String.valueOf(ex.getValue()).length() - 1;
                     for (File file : listFiles) {
-                        if (file.isDirectory()) {                                                             //возможно здесь много лишних раз переименуются папки
-                            numberOfZerosToFolders = changeNumberOfZeros(numberOfZerosToFolders, countDirectories);
-                            resultString = folder.toString() + "\\" + addZeros(numberOfZerosToFolders) + ++countDirectories;
-                            resultFile = Paths.get(resultString).toFile();
-                            file.renameTo(resultFile);
-                        } else {
+                        if (!file.isDirectory()) {                                                             //возможно здесь много лишних раз переименуются папки
                             fileToString = file.toString();
                             currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
                             if (currentExtension.equals(ex.getKey())) {
@@ -187,34 +186,62 @@ public class Main {
                                 resultFile = Paths.get(resultString).toFile();
                                 file.renameTo(resultFile);
                             }
+                        } else {
+                            numberOfZerosToFolders = changeNumberOfZeros(numberOfZerosToFolders, countDirectories);
+                            resultString = folder.toString() + "\\" + addZeros(numberOfZerosToFolders) + ++countDirectories;
+                            resultFile = Paths.get(resultString).toFile();
+                            file.renameTo(resultFile);
                         }
                     }
                 }
                 break;
 
-            case "add":
-                for (String ex : extensions) {
-                    if (ex.equals("folders")) {
+            case "add": //OK
+                extensionsInDir = new HashMap<>();
+
+                //добавляем в мапу введенные расширения
+                for (String ex : extensions)
+                    extensionsInDir.put(ex, 0);
+
+                //считаем количество вхождений для каждого расширения
+                for (File file : listFiles) {
+                    if (!file.isDirectory()) {
+                        fileToString = file.toString();
+                        currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
+                        if (extensionsInDir.containsKey(currentExtension)) {
+                            extensionsInDir.put(currentExtension, extensionsInDir.get(currentExtension) + 1);
+                        }
+                    } else {
+                        if (extensionsInDir.containsKey("folders")) {
+                            extensionsInDir.put("folders", extensionsInDir.get("folders") + 1);
+                        }
+                    }
+                }
+
+                for (Map.Entry<String, Integer> ex : extensionsInDir.entrySet()) {
+                    numberOfZerosToFilesWithCurrentEx = String.valueOf(ex.getValue()).length() - 1;
+                    if (!ex.getKey().equals("folders")) {
+                        countFilesWithCurrentExtension = 0;
+                        for (File file : listFiles) {
+                            if (!file.isDirectory()) {
+                                fileToString = file.toString();
+                                currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
+                                if (currentExtension.equals(ex.getKey())) {
+                                    numberOfZerosToFilesWithCurrentEx = changeNumberOfZeros(numberOfZerosToFilesWithCurrentEx, countFilesWithCurrentExtension);
+                                    resultString = folder.toString() + "\\" + addZeros(numberOfZerosToFilesWithCurrentEx) +
+                                            ++countFilesWithCurrentExtension + " " + file.getName();
+                                    resultFile = Paths.get(resultString).toFile();
+                                    file.renameTo(resultFile);
+                                }
+                            }
+                        }
+                    } else {
                         for (File file : listFiles) {
                             if (file.isDirectory()) {
                                 numberOfZerosToFolders = changeNumberOfZeros(numberOfZerosToFolders, countDirectories);
                                 resultString = folder.toString() + "\\" + addZeros(numberOfZerosToFolders) + ++countDirectories + " " + file.getName();
                                 resultFile = Paths.get(resultString).toFile();
                                 file.renameTo(resultFile);
-                            }
-                        }
-                    } else {
-                        countFilesWithCurrentExtension = 0;
-                        for (File file : listFiles) {
-                            if (!file.isDirectory()) {
-                                fileToString = file.toString();
-                                currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
-                                if (currentExtension.equals(ex)) {
-                                    numberOfZerosToFiles = changeNumberOfZeros(numberOfZerosToFiles, countFilesWithCurrentExtension);
-                                    resultString = folder.toString() + "\\" + addZeros(numberOfZerosToFiles) + ++countFilesWithCurrentExtension + " " + file.getName();
-                                    resultFile = Paths.get(resultString).toFile();
-                                    file.renameTo(resultFile);
-                                }
                             }
                         }
                     }
