@@ -198,8 +198,8 @@ public class Main {
                             if (!file.isDirectory()) {
                                 fileToString = file.toString();
                                 currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
-                                if (currentExtension.equals(ex.getKey())) {   //renameByAddingNumberFiles()
-                                    file.renameTo(renameByAddingNumberFiles(
+                                if (currentExtension.equals(ex.getKey())) {   //renameByAddingNumber()
+                                    file.renameTo(renameByAddingNumber(
                                             numberOfZerosToFilesWithCurrentEx = changeNumberOfZeros(
                                                     numberOfZerosToFilesWithCurrentEx,
                                                     countFilesWithCurrentExtension),
@@ -209,10 +209,10 @@ public class Main {
                                 }
                             }
                         }
-                    } else {   //renameByAddingNumberFolders()
+                    } else {   //renameByAddingNumber()
                         for (File file : listFiles) {
                             if (file.isDirectory()) {
-                                file.renameTo(renameByAddingNumberFolders(
+                                file.renameTo(renameByAddingNumber(
                                         numberOfZerosToFolders = changeNumberOfZeros(
                                                 numberOfZerosToFolders,
                                                 countDirectories),
@@ -288,6 +288,7 @@ public class Main {
                String.valueOf(countFilesWithSomeExtension).length() + 1 ? numberOfZeros - 1 : numberOfZeros;
     }
 
+    // TODO: 30.10.2017 попробовать собрать все методы renameTo... в один метод
     private static File renameToNumbersFiles(int numberOfZeros, int countFiles, File folder, String extension) {
         String result = folder.toString() + "\\" + addZeros(numberOfZeros) + countFiles + "." + extension;
         return Paths.get(result).toFile();
@@ -298,13 +299,8 @@ public class Main {
         return Paths.get(result).toFile();
     }
 
-    private static File renameByAddingNumberFiles(int numberOfZeros, int countFiles, File folder, String fileName) {
+    private static File renameByAddingNumber(int numberOfZeros, int countFiles, File folder, String fileName) {
         String result = folder.toString() + "\\" + addZeros(numberOfZeros) + countFiles + " " + fileName;
-        return Paths.get(result).toFile();
-    }
-
-    private static File renameByAddingNumberFolders(int numberOfZeros, int countDirectories, File folder, String fileName) {
-        String result = folder.toString() + "\\" + addZeros(numberOfZeros) + countDirectories + " " + fileName;
         return Paths.get(result).toFile();
     }
 
