@@ -143,15 +143,18 @@ public class Main {
                         fileToString = file.toString();
                         currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
                         file.renameTo(renameToNumbersFiles(
-                                numberOfZerosToFiles = changeNumberOfZeros(numberOfZerosToFiles, countFilesWithAnyExtension),
-                                ++countFilesWithAnyExtension,
                                 folder,
+                                numberOfZerosToFiles = changeNumberOfZeros(
+                                        numberOfZerosToFiles,
+                                        countFilesWithAnyExtension),
+                                ++countFilesWithAnyExtension,
                                 currentExtension));
                     } else {                    //renameToNumbersFolders()
                         file.renameTo(renameToNumbersFolders(
-                                numberOfZerosToFolders = changeNumberOfZeros(numberOfZerosToFolders, countDirectories),
-                                ++countDirectories,
-                                folder));
+                                folder, numberOfZerosToFolders = changeNumberOfZeros(
+                                        numberOfZerosToFolders,
+                                        countDirectories),
+                                ++countDirectories));
                     }
                 }
                 break;
@@ -168,20 +171,19 @@ public class Main {
                             currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
                             if (currentExtension.equals(ex.getKey())) {
                                 file.renameTo(renameToNumbersFiles(
+                                        folder,
                                         numberOfZerosToFilesWithCurrentEx = changeNumberOfZeros(
                                                 numberOfZerosToFilesWithCurrentEx,
                                                 countFilesWithCurrentExtension),
                                         ++countFilesWithCurrentExtension,
-                                        folder,
                                         currentExtension));
                             }
                         } else { //возможно здесь много лишних раз переименуются папки ; renameToNumbersFolders()
                             file.renameTo(renameToNumbersFolders(
-                                    numberOfZerosToFolders = changeNumberOfZeros(
+                                    folder, numberOfZerosToFolders = changeNumberOfZeros(
                                             numberOfZerosToFolders,
                                             countDirectories),
-                                    ++countDirectories,
-                                    folder));
+                                    ++countDirectories));
                         }
                     }
                 }
@@ -200,11 +202,11 @@ public class Main {
                                 currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
                                 if (currentExtension.equals(ex.getKey())) {   //renameByAddingNumber()
                                     file.renameTo(renameByAddingNumber(
+                                            folder,
                                             numberOfZerosToFilesWithCurrentEx = changeNumberOfZeros(
                                                     numberOfZerosToFilesWithCurrentEx,
                                                     countFilesWithCurrentExtension),
                                             ++countFilesWithCurrentExtension,
-                                            folder,
                                             file.getName()));
                                 }
                             }
@@ -213,11 +215,11 @@ public class Main {
                         for (File file : listFiles) {
                             if (file.isDirectory()) {
                                 file.renameTo(renameByAddingNumber(
+                                        folder,
                                         numberOfZerosToFolders = changeNumberOfZeros(
                                                 numberOfZerosToFolders,
                                                 countDirectories),
                                         ++countDirectories,
-                                        folder,
                                         file.getName()));
                             }
                         }
@@ -238,11 +240,11 @@ public class Main {
                                 currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
                                 if (currentExtension.equals(ex.getKey())) {
                                     file.renameTo(renameToNumbersFiles(
+                                            folder,
                                             numberOfZerosToFilesWithCurrentEx = changeNumberOfZeros(
                                                     numberOfZerosToFilesWithCurrentEx,
                                                     countFilesWithCurrentExtension),
                                             ++countFilesWithCurrentExtension,
-                                            folder,
                                             currentExtension));
                                 }
                             }
@@ -251,11 +253,11 @@ public class Main {
                         for (File file : listFiles) {
                             if (file.isDirectory()) {
                                 file.renameTo(renameToNumbersFolders(
+                                        folder,
                                         numberOfZerosToFolders = changeNumberOfZeros(
                                                 numberOfZerosToFolders,
                                                 countDirectories),
-                                        ++countDirectories,
-                                        folder));
+                                        ++countDirectories));
                             }
                         }
                     }
@@ -288,20 +290,26 @@ public class Main {
                String.valueOf(countFilesWithSomeExtension).length() + 1 ? numberOfZeros - 1 : numberOfZeros;
     }
 
-    // TODO: 30.10.2017 попробовать собрать все методы renameTo... в один метод
-    private static File renameToNumbersFiles(int numberOfZeros, int countFiles, File folder, String extension) {
-        String result = folder.toString() + "\\" + addZeros(numberOfZeros) + countFiles + "." + extension;
-        return Paths.get(result).toFile();
+    private static String setDirectoryZerosAndCount(File folder, int numberOfZeros, int countFiles) {
+        return folder.toString() + "\\" + addZeros(numberOfZeros) + countFiles;
     }
 
-    private static File renameToNumbersFolders(int numberOfZeros, int countDirectories, File folder) {
-        String result = folder.toString() + "\\" + addZeros(numberOfZeros) + countDirectories;
-        return Paths.get(result).toFile();
+    private static File renameToNumbersFiles(File folder, int numberOfZeros, int countFiles, String extension) {
+        return Paths.get(
+                setDirectoryZerosAndCount(folder, numberOfZeros, countFiles) + "." + extension
+                        ).toFile();
     }
 
-    private static File renameByAddingNumber(int numberOfZeros, int countFiles, File folder, String fileName) {
-        String result = folder.toString() + "\\" + addZeros(numberOfZeros) + countFiles + " " + fileName;
-        return Paths.get(result).toFile();
+    private static File renameToNumbersFolders(File folder, int numberOfZeros, int countDirectories) {
+        return Paths.get(
+                setDirectoryZerosAndCount(folder, numberOfZeros, countDirectories)
+                        ).toFile();
+    }
+
+    private static File renameByAddingNumber(File folder, int numberOfZeros, int countFiles, String fileName) {
+        return Paths.get(
+                setDirectoryZerosAndCount(folder, numberOfZeros, countFiles) + " " + fileName
+                        ).toFile();
     }
 
     private static Map<String, Integer> putExtensions(String[] extensions, File[] listFiles) {
