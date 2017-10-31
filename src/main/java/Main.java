@@ -137,7 +137,7 @@ public class Main {
 
         switch (command) {
             case "all":
-                for (File file : listFiles) {   //renameToNumbersFiles()
+                for (File file : listFiles) {
                     if (!file.isDirectory()) {
                         fileToString = file.toString();
                         currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
@@ -148,9 +148,10 @@ public class Main {
                                         countFilesWithAnyExtension),
                                 ++countFilesWithAnyExtension,
                                 currentExtension));
-                    } else {                    //renameToNumbersFolders()
+                    } else {
                         file.renameTo(Util.renameToNumbersFolders(
-                                folder, numberOfZerosToFolders = Util.changeNumberOfZeros(
+                                folder,
+                                numberOfZerosToFolders = Util.changeNumberOfZeros(
                                         numberOfZerosToFolders,
                                         countDirectories),
                                 ++countDirectories));
@@ -159,9 +160,9 @@ public class Main {
                 break;
 
             case "each":
-                extensionsInDir = Util.putAllExtensions(listFiles);   //putAllExtensions()
+                extensionsInDir = Util.putAllExtensions(listFiles);
 
-                for (Map.Entry<String, Integer> ex : extensionsInDir.entrySet()) {   //renameToNumbersFiles()
+                for (Map.Entry<String, Integer> ex : extensionsInDir.entrySet()) {
                     countFilesWithCurrentExtension = 0;
                     numberOfZerosToFilesWithCurrentEx = String.valueOf(ex.getValue()).length() - 1;
                     for (File file : listFiles) {
@@ -177,9 +178,10 @@ public class Main {
                                         ++countFilesWithCurrentExtension,
                                         currentExtension));
                             }
-                        } else { //возможно здесь много лишних раз переименуются папки ; renameToNumbersFolders()
+                        } else {
                             file.renameTo(Util.renameToNumbersFolders(
-                                    folder, numberOfZerosToFolders = Util.changeNumberOfZeros(
+                                    folder,
+                                    numberOfZerosToFolders = Util.changeNumberOfZeros(
                                             numberOfZerosToFolders,
                                             countDirectories),
                                     ++countDirectories));
@@ -189,7 +191,7 @@ public class Main {
                 break;
 
             case "add":
-                extensionsInDir = Util.putExtensions(extensions, listFiles);   //putExtensions()
+                extensionsInDir = Util.putExtensions(extensions, listFiles);
 
                 for (Map.Entry<String, Integer> ex : extensionsInDir.entrySet()) {
                     numberOfZerosToFilesWithCurrentEx = String.valueOf(ex.getValue()).length() - 1;
@@ -210,7 +212,7 @@ public class Main {
                                 }
                             }
                         }
-                    } else {   //renameByAddingNumber()
+                    } else {
                         for (File file : listFiles) {
                             if (file.isDirectory()) {
                                 file.renameTo(Util.renameByAddingNumber(
@@ -227,9 +229,9 @@ public class Main {
                 break;
 
             default:
-                extensionsInDir = Util.putExtensions(extensions, listFiles);   //putExtensions()
+                extensionsInDir = Util.putExtensions(extensions, listFiles);
 
-                for (Map.Entry<String, Integer> ex : extensionsInDir.entrySet()) {   //renameToNumbersFiles()
+                for (Map.Entry<String, Integer> ex : extensionsInDir.entrySet()) {
                     numberOfZerosToFilesWithCurrentEx = String.valueOf(ex.getValue()).length() - 1;
                     if (!ex.getKey().equals("folders")) {
                         countFilesWithCurrentExtension = 0;
@@ -248,7 +250,7 @@ public class Main {
                                 }
                             }
                         }
-                    } else {   //renameToNumbersFolders()
+                    } else {
                         for (File file : listFiles) {
                             if (file.isDirectory()) {
                                 file.renameTo(Util.renameToNumbersFolders(
