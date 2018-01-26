@@ -46,7 +46,7 @@ public class Main {
             countFilesWithAnyExtension = 0,
             countFilesWithCurrentExtension;
 
-        //мапа с ключом - значением: "расширение - количество вхождений"
+        //мапа с ключом-значением: расширение-количество вхождений
         Map<String, Integer> extensionsInDir;
 
         System.out.print(
@@ -61,7 +61,7 @@ public class Main {
                 "-> each : переименование всех файлов по расширениям\n" +
                 "->  add : добавляет к названиям файлов порядковый номер\n" +
                 "-> none : преобразование по умолчанию, переименовывает по каждому " +
-                "введенному расширению (вместо ввода этой команды можно нажать Enter)\n" +
+                "введенному расширению (поле ввода этой команды можно оставить пустым)\n" +
                 "3. Прописывайте расширения через запятую, для переименования папок введите \"folders\"\n\n" +
                 "Введите путь: ");
         do {
@@ -113,7 +113,7 @@ public class Main {
 
                 extensions = stringOfExtensions.split(",");
                 for (int i = 0; i < extensions.length; i++) {
-                    extensions[i] = extensions[i].trim();
+                    extensions[i] = extensions[i].toLowerCase().trim();
                 }
                 extensions = Util.removeDuplicates(extensions);
 
@@ -127,9 +127,11 @@ public class Main {
             } while (pathIsEmpty || listFilesIsEmpty || stringOfExtensionsIsEmpty);
 
 
-        for (File file : listFiles)
-            if (file.isDirectory())
+        for (File file : listFiles) {
+            if (file.isDirectory()) {
                 numberOfFolders++;
+            }
+        }
         numberOfFiles = listFiles.length - numberOfFolders;
         numberOfZerosToFolders = String.valueOf(numberOfFolders).length() - 1;
         numberOfZerosToFiles = String.valueOf(numberOfFiles).length() - 1;
