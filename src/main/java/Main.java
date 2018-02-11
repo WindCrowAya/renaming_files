@@ -17,6 +17,7 @@ import java.util.*;
 public class Main {
 
     private static void renameFiles() throws IOException {
+        //задаем свойство для чтения кириллицы в консоли, если она присутствует в директории
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in,
                 System.getProperty("console.encoding", "cp866")));
 
@@ -25,7 +26,9 @@ public class Main {
                 stringOfExtensionsIsEmpty = true,
                 listFilesIsEmpty = true,
                 allIsEnabled  = false,
-                eachIsEnabled = false;
+                eachIsEnabled = false,
+                delIsEnabled = false,
+                separatorIsFound = false;
 
         File folder = null;
 
@@ -35,9 +38,12 @@ public class Main {
                command = "none",
                stringOfExtensions,
                currentExtension,
-               fileToString;
+               fileToString,
+               fileName;
 
         String[] extensions = new String[0];
+
+        char[] fileNameCharArray;
 
         int numberOfFiles,
             numberOfFolders = 0,
@@ -53,15 +59,16 @@ public class Main {
 
         System.out.print(
                 "\n" +
-                "+--------------------------------+\n" +
-                "| Переименование файлов в папке. |\n" +
-                "+--------------------------------+\n\n" +
+                "+-------------------------------+\n" +
+                "| Переименование файлов в папке |\n" +
+                "+-------------------------------+\n\n" +
                 "Как работать с данной программой:\n" +
                 "1. Прописывайте путь к папке.\n" +
                 "2. Воспользуйтесь специальной командой:\n" +
-                "->  all : переименование всех файлов подряд и отдельно папок\n" +
+                "-> all  : переименование всех файлов подряд и отдельно папок\n" +
                 "-> each : переименование всех файлов по расширениям\n" +
-                "->  add : добавляет к названиям файлов порядковый номер\n" +
+                "-> add  : добавляет к названиям файлов порядковый номер\n" +
+                "-> del  : удаляет нумерацию каждого файла\n" +
                 "-> none : преобразование по умолчанию, переименовывает по каждому " +
                 "введенному расширению (поле ввода этой команды можно оставить пустым)\n" +
                 "3. Прописывайте расширения через запятую, для переименования папок введите \"folders\"\n\n" +
@@ -97,13 +104,15 @@ public class Main {
                 allIsEnabled = true;
             } else if (command.equals("each")) {
                 eachIsEnabled = true;
+            } else if (command.equals("del")) {
+                delIsEnabled = true;
             } else {
                 System.out.print("Некорректная команда. Повторите ввод заново, начиная с пути: ");
                 continue;
             }
 
 
-            if (!allIsEnabled && !eachIsEnabled) {
+            if (!allIsEnabled && !eachIsEnabled && !delIsEnabled) {
                 System.out.print("Введите расширения: ");
                 stringOfExtensions = reader.readLine().trim();
 
@@ -205,7 +214,7 @@ public class Main {
                             if (!file.isDirectory()) {
                                 fileToString = file.toString();
                                 currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
-                                if (currentExtension.equals(ex.getKey())) {   //renameByAddingNumber()
+                                if (currentExtension.equals(ex.getKey())) {
                                     file.renameTo(Util.renameByAddingNumber(
                                             folder,
                                             numberOfZerosToFilesWithCurrentEx = Util.changeNumberOfZeros(
@@ -229,6 +238,28 @@ public class Main {
                             }
                         }
                     }
+                }
+                break;
+
+            case "del":
+                for (File file : listFiles) {
+                    fileName = file.getName();
+                    fileNameCharArray = fileName.toCharArray();
+                    for (int i = 0; !separatorIsFound; i++) {
+                        if (Character.isDigit(fileNameCharArray[i])) {
+                            //do nothing
+                        } else if ((!file.isDirectory() && Util.checkForSeparatorsInFile(fileName, i)) ||
+                                    (file.isDirectory() && Util.checkForSeparatorsInFolder(fileName, i))) {
+                            file.renameTo(Util.renameByDeletingNumber(
+                                    folder,
+                                    fileName,
+                                    Util.getLengthOfSeparator(fileName, i) + i - 1));  //здесь (i - 1) - смещение
+                            separatorIsFound = true;
+                        } else {
+                            break;
+                        }
+                    }
+                    separatorIsFound = false;
                 }
                 break;
 

@@ -1,8 +1,6 @@
 import java.io.File;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 class Util {
     static String[] removeDuplicates(String[] s) {
@@ -46,6 +44,12 @@ class Util {
     static File renameByAddingNumber(File folder, int numberOfZeros, int countFiles, String fileName) {
         return Paths.get(
                 setDirectoryZerosAndCount(folder, numberOfZeros, countFiles) + " " + fileName
+                        ).toFile();
+    }
+
+    static File renameByDeletingNumber(File folder, String fileName, int counter) {
+        return Paths.get(
+                folder.toString() + "\\" + fileName.substring(counter + 1)
                         ).toFile();
     }
 
@@ -95,5 +99,56 @@ class Util {
         }
 
         return extensionsInDir;
+    }
+
+    static boolean countOfPointMoreThanOne(String fileToString) {
+        int count = 0;
+        for (char ch : fileToString.toCharArray()) {
+            if (String.valueOf(ch).equals(".")) {
+                count++;
+                if (count > 1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static boolean checkForSeparators(String fileName, int counter) {
+        return fileName.regionMatches(counter, " - ",0, 3) ||
+               fileName.regionMatches(counter, " ",  0, 1) ||
+               fileName.regionMatches(counter, "-",  0, 1) ||
+               fileName.regionMatches(counter, ". ", 0, 2);
+    }
+
+    static boolean checkForSeparatorsInFile(String fileName, int counter) {
+        return checkForSeparators(fileName, counter) ||
+               (countOfPointMoreThanOne(fileName) && fileName.regionMatches(counter, ".", 0, 1));
+    }
+
+    static boolean checkForSeparatorsInFolder(String fileName, int counter) {
+        return checkForSeparators(fileName, counter) ||
+               fileName.regionMatches(counter, ".", 0, 1);
+    }
+
+    static int getLengthOfSeparator(String fileName, int counter) {
+        List<String> separators = new ArrayList<>();
+
+        separators.add(" - ");
+        separators.add(" ");
+        separators.add("-");
+        separators.add(". ");
+        separators.add(".");
+
+        int length;
+        for (String separator : separators) {
+            length = separator.length();
+            if (fileName.regionMatches(counter, separator, 0, length)) {
+                return length;
+            }
+        }
+
+        //не должен срабатывать, поскольку в условии имеется проверка на разделители
+        return 0;
     }
 }
