@@ -1,3 +1,5 @@
+package ru.wca.rf;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -27,8 +29,7 @@ public class Main {
                 listFilesIsEmpty = true,
                 allIsEnabled  = false,
                 eachIsEnabled = false,
-                delIsEnabled = false,
-                separatorIsFound = false;
+                delPlusIsEnabled = false;
 
         File folder = null;
 
@@ -38,12 +39,9 @@ public class Main {
                command = "none",
                stringOfExtensions,
                currentExtension,
-               fileToString,
-               fileName;
+               fileToString;
 
         String[] extensions = new String[0];
-
-        char[] fileNameCharArray;
 
         int numberOfFiles,
             numberOfFolders = 0,
@@ -68,7 +66,8 @@ public class Main {
                 "-> all  : переименование всех файлов подряд и отдельно папок\n" +
                 "-> each : переименование всех файлов по расширениям\n" +
                 "-> add  : добавляет к названиям файлов порядковый номер\n" +
-                "-> del  : удаляет нумерацию каждого файла\n" +
+                "-> del  : удаляет нумерацию файлов по введенным расширениям\n" +
+                "-> del+ : удаляет нумерацию каждого файла\n" +
                 "-> none : преобразование по умолчанию, переименовывает по каждому " +
                 "введенному расширению (поле ввода этой команды можно оставить пустым)\n" +
                 "3. Прописывайте расширения через запятую, для переименования папок введите \"folders\"\n\n" +
@@ -98,21 +97,22 @@ public class Main {
             commandIsEmpty = Util.isEmpty(command);
             if (commandIsEmpty ||
                 command.equals("none") ||
-                command.equals("add")) {
+                command.equals("add")  ||
+                command.equals("del")) {
                 //do nothing, because command is correct
             } else if (command.equals("all")) {
                 allIsEnabled = true;
             } else if (command.equals("each")) {
                 eachIsEnabled = true;
-            } else if (command.equals("del")) {
-                delIsEnabled = true;
+            } else if (command.equals("del+")) {
+                delPlusIsEnabled = true;
             } else {
                 System.out.print("Некорректная команда. Повторите ввод заново, начиная с пути: ");
                 continue;
             }
 
 
-            if (!allIsEnabled && !eachIsEnabled && !delIsEnabled) {
+            if (!allIsEnabled && !eachIsEnabled && !delPlusIsEnabled) {
                 System.out.print("Введите расширения: ");
                 stringOfExtensions = reader.readLine().trim();
 
@@ -241,26 +241,19 @@ public class Main {
                 }
                 break;
 
+            case "del+":
+                Util.deletingNumbers(true, true, listFiles, null, folder);
+                break;
+
             case "del":
-                for (File file : listFiles) {
-                    fileName = file.getName();
-                    fileNameCharArray = fileName.toCharArray();
-                    for (int i = 0; !separatorIsFound; i++) {
-                        if (Character.isDigit(fileNameCharArray[i])) {
-                            //do nothing
-                        } else if ((!file.isDirectory() && Util.checkForSeparatorsInFile(fileName, i)) ||
-                                    (file.isDirectory() && Util.checkForSeparatorsInFolder(fileName, i))) {
-                            file.renameTo(Util.renameByDeletingNumber(
-                                    folder,
-                                    fileName,
-                                    Util.getLengthOfSeparator(fileName, i) + i - 1));  //здесь (i - 1) - смещение
-                            separatorIsFound = true;
-                        } else {
-                            break;
-                        }
+                for (String ex : extensions) {
+                    if (!ex.equals("folders")) {
+                        Util.deletingNumbers(false, true, listFiles, ex, folder);
+                    } else {
+                        Util.deletingNumbers(true, false, listFiles, ex, folder);
                     }
-                    separatorIsFound = false;
                 }
+
                 break;
 
             default:

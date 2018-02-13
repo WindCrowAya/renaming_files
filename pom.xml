@@ -48,7 +48,7 @@
                     <archive>
                         <manifest>
                             <!--<addClassPath>true</addClassPath>-->
-                            <mainClass>Main</mainClass>
+                            <mainClass>ru.wca.rf.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

@@ -1,4 +1,7 @@
+package ru.wca.rf;
+
 import org.junit.Test;
+import ru.wca.rf.Util;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -16,15 +19,15 @@ public class UtilTest {
         File file5 = new File("D:\\Тест\\Inner\\1 aaa.png");
 
         assertEquals(Paths.get("D:\\Тест\\Inner\\aya.txt").toFile(),
-                Util.renameByDeletingNumber(Paths.get(file1.getParent()).toFile(), file1.getName(),4));
+                Util.renameByDeletingNumber(Paths.get(file1.getParent()).toFile(), file1.getName(),3));
         assertEquals(Paths.get("D:\\Тест\\Inner\\s.png"  ).toFile(),
-                Util.renameByDeletingNumber(Paths.get(file2.getParent()).toFile(), file2.getName(),2));
+                Util.renameByDeletingNumber(Paths.get(file2.getParent()).toFile(), file2.getName(),1));
         assertEquals(Paths.get("D:\\Тест\\Inner\\txt.txt").toFile(),
-                Util.renameByDeletingNumber(Paths.get(file3.getParent()).toFile(), file3.getName(),3));
+                Util.renameByDeletingNumber(Paths.get(file3.getParent()).toFile(), file3.getName(),2));
         assertEquals(Paths.get("D:\\Тест\\Inner\\aaa.txt").toFile(),
-                Util.renameByDeletingNumber(Paths.get(file4.getParent()).toFile(), file4.getName(),0));
+                Util.renameByDeletingNumber(Paths.get(file4.getParent()).toFile(), file4.getName(),-1));  //такой случай по условиям не произойдет
         assertEquals(Paths.get("D:\\Тест\\Inner\\aaa.png").toFile(),
-                Util.renameByDeletingNumber(Paths.get(file5.getParent()).toFile(), file5.getName(),2));
+                Util.renameByDeletingNumber(Paths.get(file5.getParent()).toFile(), file5.getName(),1));
     }
 
     @Test

@@ -1,3 +1,5 @@
+package ru.wca.rf;
+
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.*;
@@ -115,7 +117,8 @@ class Util {
     }
 
     private static boolean checkForSeparators(String fileName, int counter) {
-        return fileName.regionMatches(counter, " - ",0, 3) ||
+        return fileName.regionMatches(counter, "_",  0, 1) ||
+               fileName.regionMatches(counter, " - ",0, 3) ||
                fileName.regionMatches(counter, " ",  0, 1) ||
                fileName.regionMatches(counter, "-",  0, 1) ||
                fileName.regionMatches(counter, ". ", 0, 2);
@@ -126,7 +129,7 @@ class Util {
                (countOfPointMoreThanOne(fileName) && fileName.regionMatches(counter, ".", 0, 1));
     }
 
-    static boolean checkForSeparatorsInFolder(String fileName, int counter) {
+    private static boolean checkForSeparatorsInFolder(String fileName, int counter) {
         return checkForSeparators(fileName, counter) ||
                fileName.regionMatches(counter, ".", 0, 1);
     }
@@ -134,6 +137,7 @@ class Util {
     static int getLengthOfSeparator(String fileName, int counter) {
         List<String> separators = new ArrayList<>();
 
+        separators.add("_");
         separators.add(" - ");
         separators.add(" ");
         separators.add("-");
@@ -150,5 +154,49 @@ class Util {
 
         //не должен срабатывать, поскольку в условии имеется проверка на разделители
         return 0;
+    }
+
+    private static boolean checkFile(File file, String fileName, int counter) {
+        return !file.isDirectory() && Util.checkForSeparatorsInFile(fileName, counter);
+    }
+
+    private static boolean checkFolder(File file, String fileName, int counter) {
+        return file.isDirectory() && Util.checkForSeparatorsInFolder(fileName, counter);
+    }
+
+    static void deletingNumbers(boolean isItFolders, boolean isItFiles, File[] listFiles, String extension, File folder) {
+        String fileName,
+               fileToString;
+
+        char[] fileNameCharArray;
+
+        boolean separatorIsFound = false,
+                numberIsFound = false;
+
+        for (File file : listFiles) {
+            fileName = file.getName();
+            fileNameCharArray = fileName.toCharArray();
+            fileToString = file.toString();
+            if ((isItFiles && fileToString.substring(fileToString.lastIndexOf(".") + 1).equals(extension)) ||
+                (isItFiles && isItFolders) ||
+                (isItFolders && file.isDirectory())) {
+                for (int i = 0; !separatorIsFound; i++) {
+                    if (Character.isDigit(fileNameCharArray[i])) {
+                        numberIsFound = true;
+                    } else if (numberIsFound && (Util.checkFile(file, fileName, i) ||
+                                                 Util.checkFolder(file, fileName, i))) {
+                        file.renameTo(Util.renameByDeletingNumber(
+                                folder,
+                                fileName,
+                                (i - 1) + Util.getLengthOfSeparator(fileName, i)));  //здесь (i - 1) - смещение
+                        separatorIsFound = true;
+                    } else {
+                        break;
+                    }
+                }
+            }
+            numberIsFound = false;
+            separatorIsFound = false;
+        }
     }
 }
