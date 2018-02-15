@@ -37,23 +37,14 @@ public class Main {
 
         String path,
                command = "none",
-               stringOfExtensions,
-               currentExtension,
-               fileToString;
+               stringOfExtensions;
 
         String[] extensions = new String[0];
 
         int numberOfFiles,
             numberOfFolders = 0,
             numberOfZerosToFolders,
-            numberOfZerosToFiles,
-            numberOfZerosToFilesWithCurrentEx,
-            countDirectories = 0,
-            countFilesWithAnyExtension = 0,
-            countFilesWithCurrentExtension;
-
-        //мапа с ключом-значением: расширение-количество вхождений
-        Map<String, Integer> extensionsInDir;
+            numberOfZerosToFiles;
 
         System.out.print(
                 "\n" +
@@ -150,18 +141,246 @@ public class Main {
 
         switch (command) {
             case "all":
+                executeCommandAll(listFiles, folder, numberOfZerosToFiles, numberOfZerosToFolders);
+                break;
+
+            case "each":
+                executeCommandEach(listFiles, folder, numberOfZerosToFolders);
+                break;
+
+            case "add":
+                executeCommandAdd(listFiles, folder, numberOfZerosToFolders, extensions);
+                break;
+
+            case "del+":
+                executeCommandDel(true, true, listFiles, null, folder);
+                break;
+
+            case "del":
+                for (String ex : extensions) {
+                    if (!ex.equals("folders")) {
+                        executeCommandDel(false, true, listFiles, ex, folder);
+                    } else {
+                        executeCommandDel(true, false, listFiles, ex, folder);
+                    }
+                }
+                break;
+
+            default:
+                executeDefaultCommand(listFiles, folder, numberOfZerosToFolders, extensions);
+                break;
+            }
+
+            System.out.println("Переименование завершено.");
+        }
+
+    static void executeCommandAll(File[] listFiles, File folder, int numberOfZerosToFiles, int numberOfZerosToFolders) {
+        String fileToString,
+               currentExtension;
+
+        int countFilesWithAnyExtension = 0,
+            countDirectories = 0;
+
+        for (File file : listFiles) {
+            if (!file.isDirectory()) {
+                fileToString = file.toString();
+                currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
+                file.renameTo(Util.renameToNumbersFiles(
+                        folder,
+                        numberOfZerosToFiles = Util.changeNumberOfZeros(   // TODO: 15.02.2018 избавиться от постоянной проверок на нули
+                                numberOfZerosToFiles,
+                                countFilesWithAnyExtension),
+                        ++countFilesWithAnyExtension,
+                        currentExtension));
+            } else {
+                file.renameTo(Util.renameToNumbersFolders(
+                        folder,
+                        numberOfZerosToFolders = Util.changeNumberOfZeros(
+                                numberOfZerosToFolders,
+                                countDirectories),
+                        ++countDirectories));
+            }
+        }
+    }
+
+    static void executeCommandEach(File[] listFiles, File folder, int numberOfZerosToFolders) {
+        String fileToString,
+               currentExtension;
+
+        int countFilesWithCurrentExtension,
+            numberOfZerosToFilesWithCurrentEx,
+            countDirectories = 0;
+
+        //мапа с ключом-значением: расширение-количество вхождений
+        Map<String, Integer> extensionsInDir = Util.putAllExtensions(listFiles);
+
+        for (Map.Entry<String, Integer> ex : extensionsInDir.entrySet()) {
+            countFilesWithCurrentExtension = 0;
+            numberOfZerosToFilesWithCurrentEx = String.valueOf(ex.getValue()).length() - 1;
+            for (File file : listFiles) {
+                if (!file.isDirectory()) {
+                    fileToString = file.toString();
+                    currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
+                    if (currentExtension.equals(ex.getKey())) {
+                        file.renameTo(Util.renameToNumbersFiles(
+                                folder,
+                                numberOfZerosToFilesWithCurrentEx = Util.changeNumberOfZeros(
+                                        numberOfZerosToFilesWithCurrentEx,
+                                        countFilesWithCurrentExtension),
+                                ++countFilesWithCurrentExtension,
+                                currentExtension));
+                    }
+                } else {
+                    file.renameTo(Util.renameToNumbersFolders(
+                            folder,
+                            numberOfZerosToFolders = Util.changeNumberOfZeros(
+                                    numberOfZerosToFolders,
+                                    countDirectories),
+                            ++countDirectories));
+                }
+            }
+        }
+    }
+
+    static void executeCommandAdd(File[] listFiles, File folder, int numberOfZerosToFolders, String[] extensions) {
+        String fileToString,
+               currentExtension;
+
+        int countFilesWithCurrentExtension,
+            numberOfZerosToFilesWithCurrentEx,
+            countDirectories = 0;
+
+        Map<String, Integer> extensionsInDir = Util.putExtensions(extensions, listFiles);
+
+        for (Map.Entry<String, Integer> ex : extensionsInDir.entrySet()) {
+            numberOfZerosToFilesWithCurrentEx = String.valueOf(ex.getValue()).length() - 1;
+            if (!ex.getKey().equals("folders")) {
+                countFilesWithCurrentExtension = 0;
                 for (File file : listFiles) {
                     if (!file.isDirectory()) {
                         fileToString = file.toString();
                         currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
-                        file.renameTo(Util.renameToNumbersFiles(
+                        if (currentExtension.equals(ex.getKey())) {
+                            file.renameTo(Util.renameByAddingNumber(
+                                    folder,
+                                    numberOfZerosToFilesWithCurrentEx = Util.changeNumberOfZeros(
+                                            numberOfZerosToFilesWithCurrentEx,
+                                            countFilesWithCurrentExtension),
+                                    ++countFilesWithCurrentExtension,
+                                    file.getName()));
+                        }
+                    }
+                }
+            } else {
+                for (File file : listFiles) {
+                    if (file.isDirectory()) {
+                        file.renameTo(Util.renameByAddingNumber(
                                 folder,
-                                numberOfZerosToFiles = Util.changeNumberOfZeros(
-                                        numberOfZerosToFiles,
-                                        countFilesWithAnyExtension),
-                                ++countFilesWithAnyExtension,
-                                currentExtension));
+                                numberOfZerosToFolders = Util.changeNumberOfZeros(
+                                        numberOfZerosToFolders,
+                                        countDirectories),
+                                ++countDirectories,
+                                file.getName()));
+                    }
+                }
+            }
+        }
+    }
+
+    static void executeCommandDel(boolean isItFolders, boolean isItFiles, File[] listFiles, String extension, File folder) {
+        String fileName,
+               fileNameWithoutEx,
+               fileToString;
+
+        char[] fileNameCharArray,
+               fileNameWithoutExCharArray;
+
+        boolean separatorIsFound = false,
+                numberIsFound = false;
+
+        search:
+        for (File file : listFiles) {
+            fileName = file.getName();
+            fileNameCharArray = fileName.toCharArray();
+            fileToString = file.toString();
+            if (!file.isDirectory()) {
+                fileNameWithoutEx = fileName.substring(0, fileName.lastIndexOf(".")).trim();
+                fileNameWithoutExCharArray = fileNameWithoutEx.toCharArray();
+                for (int i = 0; i < fileNameWithoutExCharArray.length; i++) {
+                    if (Character.isDigit(fileNameWithoutExCharArray[i])) {
+                        if (i + 1 == fileNameWithoutExCharArray.length) {
+                            continue search;
+                        }
                     } else {
+                        break;
+                    }
+                }
+            } else {
+                for (int i = 0; i < fileNameCharArray.length; i++) {
+                    if (Character.isDigit(fileNameCharArray[i])) {
+                        if (i + 1 == fileNameCharArray.length) {
+                            continue search;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+            if ((isItFiles && fileToString.substring(fileToString.lastIndexOf(".") + 1).equals(extension)) ||   //files only
+                (isItFiles && isItFolders) ||                                                                       //folders & files
+                (isItFolders && file.isDirectory())) {                                                              //folders only
+                for (int i = 0; !separatorIsFound; i++) {
+                    if (Character.isDigit(fileNameCharArray[i])) {
+                        numberIsFound = true;
+                    } else if (numberIsFound && (Util.checkFile(file, fileName, i) ||
+                                                 Util.checkFolder(file, fileName, i))) {
+                        file.renameTo(Util.renameByDeletingNumber(
+                                folder,
+                                fileName,
+                                (i - 1) + Util.getLengthOfSeparator(fileName, i)));  //здесь (i - 1) - смещение
+                        separatorIsFound = true;
+                    } else {
+                        break;
+                    }
+                }
+            }
+            numberIsFound = false;
+            separatorIsFound = false;
+        }
+    }
+
+    static void executeDefaultCommand(File[] listFiles, File folder, int numberOfZerosToFolders, String[] extensions) {
+        String fileToString,
+               currentExtension;
+
+        int countFilesWithCurrentExtension,
+            numberOfZerosToFilesWithCurrentEx,
+            countDirectories = 0;
+
+        Map<String, Integer> extensionsInDir = Util.putExtensions(extensions, listFiles);
+
+        for (Map.Entry<String, Integer> ex : extensionsInDir.entrySet()) {
+            numberOfZerosToFilesWithCurrentEx = String.valueOf(ex.getValue()).length() - 1;
+            if (!ex.getKey().equals("folders")) {
+                countFilesWithCurrentExtension = 0;
+                for (File file : listFiles) {
+                    if (!file.isDirectory()) {
+                        fileToString = file.toString();
+                        currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
+                        if (currentExtension.equals(ex.getKey())) {
+                            file.renameTo(Util.renameToNumbersFiles(
+                                    folder,
+                                    numberOfZerosToFilesWithCurrentEx = Util.changeNumberOfZeros(
+                                            numberOfZerosToFilesWithCurrentEx,
+                                            countFilesWithCurrentExtension),
+                                    ++countFilesWithCurrentExtension,
+                                    currentExtension));
+                        }
+                    }
+                }
+            } else {
+                for (File file : listFiles) {
+                    if (file.isDirectory()) {
                         file.renameTo(Util.renameToNumbersFolders(
                                 folder,
                                 numberOfZerosToFolders = Util.changeNumberOfZeros(
@@ -170,132 +389,9 @@ public class Main {
                                 ++countDirectories));
                     }
                 }
-                break;
-
-            case "each":
-                extensionsInDir = Util.putAllExtensions(listFiles);
-
-                for (Map.Entry<String, Integer> ex : extensionsInDir.entrySet()) {
-                    countFilesWithCurrentExtension = 0;
-                    numberOfZerosToFilesWithCurrentEx = String.valueOf(ex.getValue()).length() - 1;
-                    for (File file : listFiles) {
-                        if (!file.isDirectory()) {
-                            fileToString = file.toString();
-                            currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
-                            if (currentExtension.equals(ex.getKey())) {
-                                file.renameTo(Util.renameToNumbersFiles(
-                                        folder,
-                                        numberOfZerosToFilesWithCurrentEx = Util.changeNumberOfZeros(
-                                                numberOfZerosToFilesWithCurrentEx,
-                                                countFilesWithCurrentExtension),
-                                        ++countFilesWithCurrentExtension,
-                                        currentExtension));
-                            }
-                        } else {
-                            file.renameTo(Util.renameToNumbersFolders(
-                                    folder,
-                                    numberOfZerosToFolders = Util.changeNumberOfZeros(
-                                            numberOfZerosToFolders,
-                                            countDirectories),
-                                    ++countDirectories));
-                        }
-                    }
-                }
-                break;
-
-            case "add":
-                extensionsInDir = Util.putExtensions(extensions, listFiles);
-
-                for (Map.Entry<String, Integer> ex : extensionsInDir.entrySet()) {
-                    numberOfZerosToFilesWithCurrentEx = String.valueOf(ex.getValue()).length() - 1;
-                    if (!ex.getKey().equals("folders")) {
-                        countFilesWithCurrentExtension = 0;
-                        for (File file : listFiles) {
-                            if (!file.isDirectory()) {
-                                fileToString = file.toString();
-                                currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
-                                if (currentExtension.equals(ex.getKey())) {
-                                    file.renameTo(Util.renameByAddingNumber(
-                                            folder,
-                                            numberOfZerosToFilesWithCurrentEx = Util.changeNumberOfZeros(
-                                                    numberOfZerosToFilesWithCurrentEx,
-                                                    countFilesWithCurrentExtension),
-                                            ++countFilesWithCurrentExtension,
-                                            file.getName()));
-                                }
-                            }
-                        }
-                    } else {
-                        for (File file : listFiles) {
-                            if (file.isDirectory()) {
-                                file.renameTo(Util.renameByAddingNumber(
-                                        folder,
-                                        numberOfZerosToFolders = Util.changeNumberOfZeros(
-                                                numberOfZerosToFolders,
-                                                countDirectories),
-                                        ++countDirectories,
-                                        file.getName()));
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case "del+":
-                Util.deletingNumbers(true, true, listFiles, null, folder);
-                break;
-
-            case "del":
-                for (String ex : extensions) {
-                    if (!ex.equals("folders")) {
-                        Util.deletingNumbers(false, true, listFiles, ex, folder);
-                    } else {
-                        Util.deletingNumbers(true, false, listFiles, ex, folder);
-                    }
-                }
-
-                break;
-
-            default:
-                extensionsInDir = Util.putExtensions(extensions, listFiles);
-
-                for (Map.Entry<String, Integer> ex : extensionsInDir.entrySet()) {
-                    numberOfZerosToFilesWithCurrentEx = String.valueOf(ex.getValue()).length() - 1;
-                    if (!ex.getKey().equals("folders")) {
-                        countFilesWithCurrentExtension = 0;
-                        for (File file : listFiles) {
-                            if (!file.isDirectory()) {
-                                fileToString = file.toString();
-                                currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
-                                if (currentExtension.equals(ex.getKey())) {
-                                    file.renameTo(Util.renameToNumbersFiles(
-                                            folder,
-                                            numberOfZerosToFilesWithCurrentEx = Util.changeNumberOfZeros(
-                                                    numberOfZerosToFilesWithCurrentEx,
-                                                    countFilesWithCurrentExtension),
-                                            ++countFilesWithCurrentExtension,
-                                            currentExtension));
-                                }
-                            }
-                        }
-                    } else {
-                        for (File file : listFiles) {
-                            if (file.isDirectory()) {
-                                file.renameTo(Util.renameToNumbersFolders(
-                                        folder,
-                                        numberOfZerosToFolders = Util.changeNumberOfZeros(
-                                                numberOfZerosToFolders,
-                                                countDirectories),
-                                        ++countDirectories));
-                            }
-                        }
-                    }
-                }
             }
-
-            System.out.println("Переименование завершено.");
         }
-
+    }
 
     public static void main(String[] args) {
         try {

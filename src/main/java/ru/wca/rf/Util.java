@@ -61,8 +61,9 @@ class Util {
                currentExtension;
 
         //добавляем в мапу введенные расширения
-        for (String ex : extensions)
+        for (String ex : extensions) {
             extensionsInDir.put(ex, 0);
+        }
 
         //считаем количество вхождений для каждого расширения
         for (File file : listFiles) {
@@ -129,7 +130,7 @@ class Util {
                (countOfPointMoreThanOne(fileName) && fileName.regionMatches(counter, ".", 0, 1));
     }
 
-    private static boolean checkForSeparatorsInFolder(String fileName, int counter) {
+    static boolean checkForSeparatorsInFolder(String fileName, int counter) {
         return checkForSeparators(fileName, counter) ||
                fileName.regionMatches(counter, ".", 0, 1);
     }
@@ -156,47 +157,11 @@ class Util {
         return 0;
     }
 
-    private static boolean checkFile(File file, String fileName, int counter) {
+    static boolean checkFile(File file, String fileName, int counter) {
         return !file.isDirectory() && Util.checkForSeparatorsInFile(fileName, counter);
     }
 
-    private static boolean checkFolder(File file, String fileName, int counter) {
+    static boolean checkFolder(File file, String fileName, int counter) {
         return file.isDirectory() && Util.checkForSeparatorsInFolder(fileName, counter);
-    }
-
-    static void deletingNumbers(boolean isItFolders, boolean isItFiles, File[] listFiles, String extension, File folder) {
-        String fileName,
-               fileToString;
-
-        char[] fileNameCharArray;
-
-        boolean separatorIsFound = false,
-                numberIsFound = false;
-
-        for (File file : listFiles) {
-            fileName = file.getName();
-            fileNameCharArray = fileName.toCharArray();
-            fileToString = file.toString();
-            if ((isItFiles && fileToString.substring(fileToString.lastIndexOf(".") + 1).equals(extension)) ||
-                (isItFiles && isItFolders) ||
-                (isItFolders && file.isDirectory())) {
-                for (int i = 0; !separatorIsFound; i++) {
-                    if (Character.isDigit(fileNameCharArray[i])) {
-                        numberIsFound = true;
-                    } else if (numberIsFound && (Util.checkFile(file, fileName, i) ||
-                                                 Util.checkFolder(file, fileName, i))) {
-                        file.renameTo(Util.renameByDeletingNumber(
-                                folder,
-                                fileName,
-                                (i - 1) + Util.getLengthOfSeparator(fileName, i)));  //здесь (i - 1) - смещение
-                        separatorIsFound = true;
-                    } else {
-                        break;
-                    }
-                }
-            }
-            numberIsFound = false;
-            separatorIsFound = false;
-        }
     }
 }
