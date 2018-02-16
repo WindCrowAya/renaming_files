@@ -87,15 +87,15 @@ public class Main {
 
             commandIsEmpty = Util.isEmpty(command);
             if (commandIsEmpty ||
-                command.equals("none") ||
-                command.equals("add")  ||
-                command.equals("del")) {
+                "none".equals(command) ||
+                "add".equals(command) ||
+                "del".equals(command)) {
                 //do nothing, because command is correct
-            } else if (command.equals("all")) {
+            } else if ("all".equals(command)) {
                 allIsEnabled = true;
-            } else if (command.equals("each")) {
+            } else if ("each".equals(command)) {
                 eachIsEnabled = true;
-            } else if (command.equals("del+")) {
+            } else if ("del+".equals(command)) {
                 delPlusIsEnabled = true;
             } else {
                 System.out.print("Некорректная команда. Повторите ввод заново, начиная с пути: ");
@@ -158,7 +158,7 @@ public class Main {
 
             case "del":
                 for (String ex : extensions) {
-                    if (!ex.equals("folders")) {
+                    if (!"folders".equals(ex)) {
                         executeCommandDel(false, true, listFiles, ex, folder);
                     } else {
                         executeCommandDel(true, false, listFiles, ex, folder);
@@ -179,6 +179,7 @@ public class Main {
                currentExtension;
 
         int countFilesWithAnyExtension = 0,
+            numberOfZerosToFoldersTemp = numberOfZerosToFolders,  //Codacy: изменение входного параметра нежелательно; введена temp-переменная (1)
             countDirectories = 0;
 
         for (File file : listFiles) {
@@ -187,7 +188,7 @@ public class Main {
                 currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
                 file.renameTo(Util.renameToNumbersFiles(
                         folder,
-                        numberOfZerosToFiles = Util.changeNumberOfZeros(   // TODO: 15.02.2018 избавиться от постоянной проверок на нули
+                        numberOfZerosToFiles = Util.changeNumberOfZeros(
                                 numberOfZerosToFiles,
                                 countFilesWithAnyExtension),
                         ++countFilesWithAnyExtension,
@@ -195,8 +196,8 @@ public class Main {
             } else {
                 file.renameTo(Util.renameToNumbersFolders(
                         folder,
-                        numberOfZerosToFolders = Util.changeNumberOfZeros(
-                                numberOfZerosToFolders,
+                        numberOfZerosToFoldersTemp = Util.changeNumberOfZeros(
+                                numberOfZerosToFoldersTemp,
                                 countDirectories),
                         ++countDirectories));
             }
@@ -209,6 +210,7 @@ public class Main {
 
         int countFilesWithCurrentExtension,
             numberOfZerosToFilesWithCurrentEx,
+            numberOfZerosToFoldersTemp = numberOfZerosToFolders,  //(1)
             countDirectories = 0;
 
         //мапа с ключом-значением: расширение-количество вхождений
@@ -233,8 +235,8 @@ public class Main {
                 } else {
                     file.renameTo(Util.renameToNumbersFolders(
                             folder,
-                            numberOfZerosToFolders = Util.changeNumberOfZeros(
-                                    numberOfZerosToFolders,
+                            numberOfZerosToFoldersTemp = Util.changeNumberOfZeros(
+                                    numberOfZerosToFoldersTemp,
                                     countDirectories),
                             ++countDirectories));
                 }
@@ -248,6 +250,7 @@ public class Main {
 
         int countFilesWithCurrentExtension,
             numberOfZerosToFilesWithCurrentEx,
+            numberOfZerosToFoldersTemp = numberOfZerosToFolders,  //(1)
             countDirectories = 0;
 
         Map<String, Integer> extensionsInDir = Util.putExtensions(extensions, listFiles);
@@ -276,8 +279,8 @@ public class Main {
                     if (file.isDirectory()) {
                         file.renameTo(Util.renameByAddingNumber(
                                 folder,
-                                numberOfZerosToFolders = Util.changeNumberOfZeros(
-                                        numberOfZerosToFolders,
+                                numberOfZerosToFoldersTemp = Util.changeNumberOfZeros(
+                                        numberOfZerosToFoldersTemp,
                                         countDirectories),
                                 ++countDirectories,
                                 file.getName()));
@@ -355,6 +358,7 @@ public class Main {
 
         int countFilesWithCurrentExtension,
             numberOfZerosToFilesWithCurrentEx,
+            numberOfZerosToFoldersTemp = numberOfZerosToFolders,  //Codacy: изменение входного параметра нежелательно; введена temp-переменная
             countDirectories = 0;
 
         Map<String, Integer> extensionsInDir = Util.putExtensions(extensions, listFiles);
@@ -383,8 +387,8 @@ public class Main {
                     if (file.isDirectory()) {
                         file.renameTo(Util.renameToNumbersFolders(
                                 folder,
-                                numberOfZerosToFolders = Util.changeNumberOfZeros(
-                                        numberOfZerosToFolders,
+                                numberOfZerosToFoldersTemp = Util.changeNumberOfZeros(
+                                        numberOfZerosToFoldersTemp,
                                         countDirectories),
                                 ++countDirectories));
                     }
