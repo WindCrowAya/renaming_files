@@ -24,11 +24,10 @@ public class Main {
                 System.getProperty("console.encoding", "cp866")));
 
         boolean pathIsEmpty,
-                commandIsEmpty,
                 stringOfExtensionsIsEmpty = true,
                 listFilesIsEmpty = true,
+                defIsEnabled = false,
                 allIsEnabled  = false,
-                eachIsEnabled = false,
                 delPlusIsEnabled = false;
 
         File folder = null;
@@ -36,7 +35,7 @@ public class Main {
         File[] listFiles = new File[0];
 
         String path,
-               command = "none",
+               command = "",
                stringOfExtensions;
 
         String[] extensions = new String[0];
@@ -54,13 +53,13 @@ public class Main {
                 "Как работать с данной программой:\n" +
                 "1. Прописывайте путь к папке.\n" +
                 "2. Воспользуйтесь специальной командой:\n" +
-                "-> all  : переименование всех файлов подряд и отдельно папок\n" +
-                "-> each : переименование всех файлов по расширениям\n" +
-                "-> add  : добавляет к названиям файлов порядковый номер\n" +
-                "-> del  : удаляет нумерацию файлов по введенным расширениям\n" +
-                "-> del+ : удаляет нумерацию каждого файла\n" +
-                "-> none : преобразование по умолчанию, переименовывает по каждому " +
-                "введенному расширению (поле ввода этой команды можно оставить пустым)\n" +
+                "-> all    : переименование всех файлов подряд и отдельно папок\n" +
+                "-> rename : переименование по каждому введенному расширению\n" +
+                "-> add    : добавляет к названиям файлов порядковый номер\n" +
+                "-> del    : удаляет нумерацию файлов по введенным расширениям\n" +
+                "-> del+   : удаляет нумерацию каждого файла\n" +
+                "-> def    : преобразование по умолчанию, переименование всех файлов по расширениям\n" +
+                "           (вместо ввода этой команды достаточно нажать Enter, оставив поле ввода пустым)\n" +
                 "3. Прописывайте расширения через запятую, для переименования папок введите \"folders\"\n\n" +
                 "Введите путь: ");
         do {
@@ -85,16 +84,14 @@ public class Main {
             System.out.print("Введите команду: ");
             command = reader.readLine().trim();
 
-            commandIsEmpty = Util.isEmpty(command);
-            if (commandIsEmpty ||
-                "none".equals(command) ||
+            if ("rename".equals(command) ||
                 "add".equals(command) ||
                 "del".equals(command)) {
                 //do nothing, because command is correct
+            } else if (Util.isEmpty(command) || "def".equals(command)) {
+                defIsEnabled = true;
             } else if ("all".equals(command)) {
                 allIsEnabled = true;
-            } else if ("each".equals(command)) {
-                eachIsEnabled = true;
             } else if ("del+".equals(command)) {
                 delPlusIsEnabled = true;
             } else {
@@ -103,7 +100,7 @@ public class Main {
             }
 
 
-            if (!allIsEnabled && !eachIsEnabled && !delPlusIsEnabled) {
+            if (!allIsEnabled && !defIsEnabled && !delPlusIsEnabled) {
                 System.out.print("Введите расширения: ");
                 stringOfExtensions = reader.readLine().trim();
 
@@ -144,8 +141,8 @@ public class Main {
                 executeCommandAll(listFiles, folder, numberOfZerosToFiles, numberOfZerosToFolders);
                 break;
 
-            case "each":
-                executeCommandEach(listFiles, folder, numberOfZerosToFolders);
+            case "rename":
+                executeCommandRename(listFiles, folder, numberOfZerosToFolders, extensions);
                 break;
 
             case "add":
@@ -167,7 +164,7 @@ public class Main {
                 break;
 
             default:
-                executeDefaultCommand(listFiles, folder, numberOfZerosToFolders, extensions);
+                executeCommandDefault(listFiles, folder, numberOfZerosToFolders);
                 break;
             }
 
@@ -204,41 +201,46 @@ public class Main {
         }
     }
 
-    static void executeCommandEach(File[] listFiles, File folder, int numberOfZerosToFolders) {
+    static void executeCommandRename(File[] listFiles, File folder, int numberOfZerosToFolders, String[] extensions) {
         String fileToString,
-               currentExtension;
+                currentExtension;
 
         int countFilesWithCurrentExtension,
-            numberOfZerosToFilesWithCurrentEx,
-            numberOfZerosToFoldersTemp = numberOfZerosToFolders,  //(1)
-            countDirectories = 0;
+                numberOfZerosToFilesWithCurrentEx,
+                numberOfZerosToFoldersTemp = numberOfZerosToFolders,  //(1)
+                countDirectories = 0;
 
-        //мапа с ключом-значением: расширение-количество вхождений
-        Map<String, Integer> extensionsInDir = Util.putAllExtensions(listFiles);
+        Map<String, Integer> extensionsInDir = Util.putExtensions(extensions, listFiles);
 
         for (Map.Entry<String, Integer> ex : extensionsInDir.entrySet()) {
-            countFilesWithCurrentExtension = 0;
             numberOfZerosToFilesWithCurrentEx = String.valueOf(ex.getValue()).length() - 1;
-            for (File file : listFiles) {
-                if (!file.isDirectory()) {
-                    fileToString = file.toString();
-                    currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
-                    if (currentExtension.equals(ex.getKey())) {
-                        file.renameTo(Util.renameToNumbersFiles(
-                                folder,
-                                numberOfZerosToFilesWithCurrentEx = Util.changeNumberOfZeros(
-                                        numberOfZerosToFilesWithCurrentEx,
-                                        countFilesWithCurrentExtension),
-                                ++countFilesWithCurrentExtension,
-                                currentExtension));
+            if (!ex.getKey().equals("folders")) {
+                countFilesWithCurrentExtension = 0;
+                for (File file : listFiles) {
+                    if (!file.isDirectory()) {
+                        fileToString = file.toString();
+                        currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
+                        if (currentExtension.equals(ex.getKey())) {
+                            file.renameTo(Util.renameToNumbersFiles(
+                                    folder,
+                                    numberOfZerosToFilesWithCurrentEx = Util.changeNumberOfZeros(
+                                            numberOfZerosToFilesWithCurrentEx,
+                                            countFilesWithCurrentExtension),
+                                    ++countFilesWithCurrentExtension,
+                                    currentExtension));
+                        }
                     }
-                } else {
-                    file.renameTo(Util.renameToNumbersFolders(
-                            folder,
-                            numberOfZerosToFoldersTemp = Util.changeNumberOfZeros(
-                                    numberOfZerosToFoldersTemp,
-                                    countDirectories),
-                            ++countDirectories));
+                }
+            } else {
+                for (File file : listFiles) {
+                    if (file.isDirectory()) {
+                        file.renameTo(Util.renameToNumbersFolders(
+                                folder,
+                                numberOfZerosToFoldersTemp = Util.changeNumberOfZeros(
+                                        numberOfZerosToFoldersTemp,
+                                        countDirectories),
+                                ++countDirectories));
+                    }
                 }
             }
         }
@@ -330,8 +332,8 @@ public class Main {
                 }
             }
             if ((isItFiles && fileToString.substring(fileToString.lastIndexOf(".") + 1).equals(extension)) ||   //files only
-                (isItFiles && isItFolders) ||                                                                       //folders & files
-                (isItFolders && file.isDirectory())) {                                                              //folders only
+                (isItFiles && isItFolders) ||                                                                   //folders & files
+                (isItFolders && file.isDirectory())) {                                                          //folders only
                 for (int i = 0; !separatorIsFound; i++) {
                     if (Character.isDigit(fileNameCharArray[i])) {
                         numberIsFound = true;
@@ -352,46 +354,41 @@ public class Main {
         }
     }
 
-    static void executeDefaultCommand(File[] listFiles, File folder, int numberOfZerosToFolders, String[] extensions) {
+    static void executeCommandDefault(File[] listFiles, File folder, int numberOfZerosToFolders) {
         String fileToString,
-               currentExtension;
+                currentExtension;
 
         int countFilesWithCurrentExtension,
-            numberOfZerosToFilesWithCurrentEx,
-            numberOfZerosToFoldersTemp = numberOfZerosToFolders,  //Codacy: изменение входного параметра нежелательно; введена temp-переменная
-            countDirectories = 0;
+                numberOfZerosToFilesWithCurrentEx,
+                numberOfZerosToFoldersTemp = numberOfZerosToFolders,  //(1)
+                countDirectories = 0;
 
-        Map<String, Integer> extensionsInDir = Util.putExtensions(extensions, listFiles);
+        //мапа с ключом-значением: расширение-количество вхождений
+        Map<String, Integer> extensionsInDir = Util.putAllExtensions(listFiles);
 
         for (Map.Entry<String, Integer> ex : extensionsInDir.entrySet()) {
+            countFilesWithCurrentExtension = 0;
             numberOfZerosToFilesWithCurrentEx = String.valueOf(ex.getValue()).length() - 1;
-            if (!ex.getKey().equals("folders")) {
-                countFilesWithCurrentExtension = 0;
-                for (File file : listFiles) {
-                    if (!file.isDirectory()) {
-                        fileToString = file.toString();
-                        currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
-                        if (currentExtension.equals(ex.getKey())) {
-                            file.renameTo(Util.renameToNumbersFiles(
-                                    folder,
-                                    numberOfZerosToFilesWithCurrentEx = Util.changeNumberOfZeros(
-                                            numberOfZerosToFilesWithCurrentEx,
-                                            countFilesWithCurrentExtension),
-                                    ++countFilesWithCurrentExtension,
-                                    currentExtension));
-                        }
-                    }
-                }
-            } else {
-                for (File file : listFiles) {
-                    if (file.isDirectory()) {
-                        file.renameTo(Util.renameToNumbersFolders(
+            for (File file : listFiles) {
+                if (!file.isDirectory()) {
+                    fileToString = file.toString();
+                    currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
+                    if (currentExtension.equals(ex.getKey())) {
+                        file.renameTo(Util.renameToNumbersFiles(
                                 folder,
-                                numberOfZerosToFoldersTemp = Util.changeNumberOfZeros(
-                                        numberOfZerosToFoldersTemp,
-                                        countDirectories),
-                                ++countDirectories));
+                                numberOfZerosToFilesWithCurrentEx = Util.changeNumberOfZeros(
+                                        numberOfZerosToFilesWithCurrentEx,
+                                        countFilesWithCurrentExtension),
+                                ++countFilesWithCurrentExtension,
+                                currentExtension));
                     }
+                } else {
+                    file.renameTo(Util.renameToNumbersFolders(
+                            folder,
+                            numberOfZerosToFoldersTemp = Util.changeNumberOfZeros(
+                                    numberOfZerosToFoldersTemp,
+                                    countDirectories),
+                            ++countDirectories));
                 }
             }
         }
