@@ -52,14 +52,14 @@ public class Main {
                 "+-------------------------------+\n\n" +
                 "Как работать с данной программой:\n" +
                 "1. Прописывайте путь к папке.\n" +
-                "2. Воспользуйтесь специальной командой:\n" +
-                "-> all    : переименование всех файлов подряд и отдельно папок\n" +
-                "-> rename : переименование по каждому введенному расширению\n" +
-                "-> add    : добавляет к названиям файлов порядковый номер\n" +
-                "-> del    : удаляет нумерацию файлов по введенным расширениям\n" +
-                "-> del+   : удаляет нумерацию каждого файла\n" +
-                "-> def    : преобразование по умолчанию, переименование всех файлов по расширениям\n" +
-                "           (вместо ввода этой команды достаточно нажать Enter, оставив поле ввода пустым)\n" +
+                "2. Воспользуйтесь специальной командой, введя его id:\n" +
+                "-> 1 :        (all) переименование всех файлов подряд и отдельно папок\n" +
+                "-> 2 :     (rename) переименование по каждому введенному расширению\n" +
+                "-> 3 :    (add num) добавляет к названиям файлов порядковый номер\n" +
+                "-> 4 : (delete num) удаляет нумерацию файлов по введенным расширениям\n" +
+                "-> 5 : (delete all) удаляет нумерацию каждого файла\n" +
+                "-> 6 : (rename all) преобразование по умолчанию, переименование всех файлов по расширениям\n" +
+                "                      (вместо ввода этой команды достаточно нажать Enter, оставив поле ввода пустым)\n" +
                 "3. Прописывайте расширения через запятую, для переименования папок введите \"folders\"\n\n" +
                 "Введите путь: ");
         do {
@@ -84,15 +84,15 @@ public class Main {
             System.out.print("Введите команду: ");
             command = reader.readLine().trim();
 
-            if ("rename".equals(command) ||
-                "add".equals(command) ||
-                "del".equals(command)) {
+            if ("2".equals(command) ||
+                "3".equals(command) ||
+                "4".equals(command)) {
                 //do nothing, because command is correct
-            } else if (Util.isEmpty(command) || "def".equals(command)) {
+            } else if (Util.isEmpty(command) || "6".equals(command)) {
                 defIsEnabled = true;
-            } else if ("all".equals(command)) {
+            } else if ("1".equals(command)) {
                 allIsEnabled = true;
-            } else if ("del+".equals(command)) {
+            } else if ("5".equals(command)) {
                 delPlusIsEnabled = true;
             } else {
                 System.out.print("Некорректная команда. Повторите ввод заново, начиная с пути: ");
@@ -137,23 +137,19 @@ public class Main {
 
 
         switch (command) {
-            case "all":
+            case "1":
                 executeCommandAll(listFiles, folder, numberOfZerosToFiles, numberOfZerosToFolders);
                 break;
 
-            case "rename":
+            case "2":
                 executeCommandRename(listFiles, folder, numberOfZerosToFolders, extensions);
                 break;
 
-            case "add":
+            case "3":
                 executeCommandAdd(listFiles, folder, numberOfZerosToFolders, extensions);
                 break;
 
-            case "del+":
-                executeCommandDel(true, true, listFiles, null, folder);
-                break;
-
-            case "del":
+            case "4":
                 for (String ex : extensions) {
                     if (!"folders".equals(ex)) {
                         executeCommandDel(false, true, listFiles, ex, folder);
@@ -163,8 +159,12 @@ public class Main {
                 }
                 break;
 
+            case "5":
+                executeCommandDel(true, true, listFiles, null, folder);
+                break;
+
             default:
-                executeCommandDefault(listFiles, folder, numberOfZerosToFolders);
+                executeCommandRenameAll(listFiles, folder, numberOfZerosToFolders);
                 break;
             }
 
@@ -354,7 +354,7 @@ public class Main {
         }
     }
 
-    static void executeCommandDefault(File[] listFiles, File folder, int numberOfZerosToFolders) {
+    static void executeCommandRenameAll(File[] listFiles, File folder, int numberOfZerosToFolders) {
         String fileToString,
                 currentExtension;
 
