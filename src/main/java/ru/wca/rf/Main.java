@@ -151,6 +151,7 @@ public class Main {
 
             case "4":
                 for (String ex : extensions) {
+                    listFiles = folder.listFiles();
                     if (!"folders".equals(ex)) {
                         executeCommandDel(false, true, listFiles, ex, folder);
                     } else {
@@ -402,6 +403,4 @@ public class Main {
             e.printStackTrace();
         }
     }
-
-    //merge test
 }
