@@ -59,7 +59,7 @@ public class Main {
                 "-> 4 : (delete num) удаляет нумерацию файлов по введенным расширениям\n" +
                 "-> 5 : (delete all) удаляет нумерацию каждого файла\n" +
                 "-> 6 : (rename all) преобразование по умолчанию, переименование всех файлов по расширениям\n" +
-                "                      (вместо ввода этой команды достаточно нажать Enter, оставив поле ввода пустым)\n" +
+                "                   (вместо ввода этой команды достаточно нажать Enter, оставив поле ввода пустым)\n" +
                 "3. Прописывайте расширения через запятую, для переименования папок введите \"folders\"\n\n" +
                 "Введите путь: ");
         do {
@@ -151,6 +151,7 @@ public class Main {
 
             case "4":
                 for (String ex : extensions) {
+                    listFiles = folder.listFiles();
                     if (!"folders".equals(ex)) {
                         executeCommandDel(false, true, listFiles, ex, folder);
                     } else {
@@ -176,7 +177,8 @@ public class Main {
                currentExtension;
 
         int countFilesWithAnyExtension = 0,
-            numberOfZerosToFoldersTemp = numberOfZerosToFolders,  //Codacy: изменение входного параметра нежелательно; введена temp-переменная (1)
+            numberOfZerosToFilesTemp = numberOfZerosToFiles,      //Codacy: изменение входного параметра нежелательно; введена temp-переменная (1)
+            numberOfZerosToFoldersTemp = numberOfZerosToFolders,
             countDirectories = 0;
 
         for (File file : listFiles) {
@@ -185,8 +187,8 @@ public class Main {
                 currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
                 file.renameTo(Util.renameToNumbersFiles(
                         folder,
-                        numberOfZerosToFiles = Util.changeNumberOfZeros(
-                                numberOfZerosToFiles,
+                        numberOfZerosToFilesTemp = Util.changeNumberOfZeros(
+                                numberOfZerosToFilesTemp,
                                 countFilesWithAnyExtension),
                         ++countFilesWithAnyExtension,
                         currentExtension));
