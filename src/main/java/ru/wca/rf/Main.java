@@ -7,16 +7,16 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 /**
- * Renaming files in specified folder.
+ * Переименование файлов в заданной папке.
  *
  * <p> Программа предназначена для переименования файлов в определенной папке.
  * Переименование файлов происходит несколькими способами в зависимости от введенного номера команды.
  * Описание каждой команды дается сразу же после старта программы.
  *
- * <p> Use the console to work with this program.
+ * <p> Используйте консоль для работы с данной программой.
  *
- * <p> View <a href="https://github.com/WindCrowAya/renaming_files">https://github.com/WindCrowAya/renaming_files</a>
- * to see the history of the project change.
+ * <p> Смотри <a href="https://github.com/WindCrowAya/sample/blob/master/src/main/java/my_examples/RenamingFilesClass.java">старую</a>
+ * и <a href="https://github.com/WindCrowAya/renaming_files">новую</a> истории изменения проекта.
  *
  * @author <a href="https://github.com/WindCrowAya">WindCrowAya</a>
  */
@@ -95,7 +95,7 @@ public class Main {
             if ("2".equals(command) ||
                 "3".equals(command) ||
                 "4".equals(command)) {
-                //do nothing, because command is correct
+                //ничего не делаем, поскольку введенная команда обрабатывает все файлы в папке
             } else if (Util.isEmpty(command) || "6".equals(command)) {
                 defIsEnabled = true;
             } else if ("1".equals(command)) {
@@ -386,9 +386,9 @@ public class Main {
                     }
                 }
             }
-            if ((isItFiles && fileToString.substring(fileToString.lastIndexOf(".") + 1).equals(extension)) ||   //files only
-                (isItFiles && isItFolders) ||                                                                       //folders & files
-                (isItFolders && file.isDirectory())) {                                                              //folders only
+            if ((isItFiles && fileToString.substring(fileToString.lastIndexOf(".") + 1).equals(extension)) ||   //только файлы
+                (isItFiles && isItFolders) ||                                                                       //папки и файлы
+                (isItFolders && file.isDirectory())) {                                                              //только папки
                 for (int i = 0; !separatorIsFound; i++) {   //поиск разделителя, если его нет, то прекращаем поиск
                     if (Character.isDigit(fileNameCharArray[i])) {
                         numberIsFound = true;
