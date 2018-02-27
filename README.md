@@ -1,5 +1,4 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/c47945a49ffa4afdaa9f7e07627cbf66)](https://app.codacy.com/app/WindCrowAya/renaming_files?utm_source=github.com&utm_medium=referral&utm_content=WindCrowAya/renaming_files&utm_campaign=badger)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a3090cdac212404d80d8d289dbc61870)](https://app.codacy.com/app/WindCrowAya/renaming_files)
 
 Переименование файлов в папке
 ===============================
