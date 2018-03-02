@@ -5,7 +5,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 /**
- * Класс содержит вспомогательные методы, в которых выполняется основная работа программы.
+ * Class contains util methods that perform the main work of the program.
  *
  * @author <a href="https://github.com/WindCrowAya">WindCrowAya</a>
  */
@@ -13,11 +13,11 @@ import java.util.*;
 class Util {
 
     /**
-     * Удаляет повторяющиеся элементы в массиве строк.
+     * Removes duplicate items in a string array.
      *
-     * @param  s Массив строк
+     * @param  s Array of strings
      *
-     * @return   Массив строк без повторений
+     * @return   Array of strings without duplications
      */
     static String[] removeDuplicates(String[] s) {
         Object[] o = Arrays.stream(s).distinct().toArray();
@@ -25,20 +25,20 @@ class Util {
     }
 
     /**
-     * Проверяет, является ли введенная строка пустой.
+     * Checks whether the entered string is empty.
      *
-     * @param  s Проверяемая строка
+     * @param  s String for check
      *
-     * @return   {@code true}, если строка пустая
+     * @return   {@code true}, if string {@code s} is empty
      */
     static boolean isEmpty(String s) {
             return (s == null) || s.equals("");
         }
 
     /**
-     * Добавляет нули перед нумерующими числами.
+     * Adds leading zeros before numbering numbers.
      *
-     * @param number Количество добавляемых нулей
+     * @param number The number of zeros to add
      */
     private static String addZeros(int number) {
         StringBuilder result = new StringBuilder();
@@ -49,12 +49,12 @@ class Util {
     }
 
     /**
-     * Изменяет число нулей перед нумерующими числами.
+     * Changes the number of zeros before numbering numbers.
      *
-     * @param   numberOfZeros                   Проверяемое количество нулей
-     * @param   countFilesWithCurrentExtension  Количество файлов с текущим расширением
+     * @param   numberOfZeros                   Number of zeros to check
+     * @param   countFilesWithCurrentExtension  Count of files with current extension
      *
-     * @return  Измененное количество нулей
+     * @return  Changed the number of zeros
      */
     static int changeNumberOfZeros(int numberOfZeros, int countFilesWithCurrentExtension) {
         return String.valueOf(countFilesWithCurrentExtension + 1).length() ==
@@ -62,28 +62,28 @@ class Util {
     }
 
     /**
-     * Задает новою директорию файла, соединяя последовательно директорию заданной папки,
-     * нумерующими числами и нулями перед ними.
+     * Set the new directory of the file, sequentially linking the directory of the specified folder,
+     * numbering numbers and zeros in front of them.
      *
-     * @param   folder         Директория рассматриваемой папки
-     * @param   numberOfZeros  Добавляемое количество нулей
-     * @param   countFiles     Нумерующее число (счетчик файлов)
+     * @param   folder         Directory of specified folder
+     * @param   numberOfZeros  Additional number of zeros
+     * @param   countFiles     Numbering number (file counter)
      *
-     * @return  Новое полное имя файла в виде строки
+     * @return  New full file name as string
      */
     private static String setDirectoryZerosAndCount(File folder, int numberOfZeros, int countFiles) {
         return folder.toString() + "\\" + addZeros(numberOfZeros) + countFiles;
     }
 
     /**
-     * Переименовывает название файла в нумерующее число, используя {@link #setDirectoryZerosAndCount(File, int, int)}
+     * Renames the file name to a numbering number using {@link #setDirectoryZerosAndCount(File, int, int)}.
      *
-     * @param   folder         Директория рассматриваемой папки
-     * @param   numberOfZeros  Добавляемое количество нулей
-     * @param   countFiles     Нумерующее число (счетчик файлов)
-     * @param   extension      Расширение файла
+     * @param   folder         Directory of specified folder
+     * @param   numberOfZeros  Additional number of zeros
+     * @param   countFiles     Numbering number (file counter)
+     * @param   extension      File extension
      *
-     * @return  Новое полное имя файла
+     * @return  New full file name
      */
     static File renameToNumbersFiles(File folder, int numberOfZeros, int countFiles, String extension) {
         return Paths.get(
@@ -92,13 +92,13 @@ class Util {
     }
 
     /**
-     * Переименовывает название папки в нумерующее число, используя {@link #setDirectoryZerosAndCount(File, int, int)}
+     * Renames the folder name to a numbering number using {@link #setDirectoryZerosAndCount(File, int, int)}.
      *
-     * @param   folder            Директория рассматриваемой папки
-     * @param   numberOfZeros     Добавляемое количество нулей
-     * @param   countDirectories  Нумерующее число (счетчик папок)
+     * @param   folder            Directory of specified folder
+     * @param   numberOfZeros     Additional number of zeros
+     * @param   countDirectories  Numbering number (folder counter)
      *
-     * @return  Новое полное имя папки
+     * @return  New full folder name
      */
     static File renameToNumbersFolders(File folder, int numberOfZeros, int countDirectories) {
         return Paths.get(
@@ -107,14 +107,14 @@ class Util {
     }
 
     /**
-     * Добавляет к названию файла нумерующее число, используя {@link #setDirectoryZerosAndCount(File, int, int)}
+     * Adds a numbering number to the file name, using {@link #setDirectoryZerosAndCount(File, int, int)}.
      *
-     * @param   folder         Директория рассматриваемой папки
-     * @param   numberOfZeros  Добавляемое количество нулей
-     * @param   countFiles     Нумерующее число (счетчик файлов)
-     * @param   fileName       Имя файла
+     * @param   folder         Directory of specified folder
+     * @param   numberOfZeros  Additional number of zeros
+     * @param   countFiles     Numbering number (file counter)
+     * @param   fileName       File name
      *
-     * @return  Новое полное имя файла с добавленной нумерацией в начале его имени
+     * @return  New full filename with added numbering at the beginning of its name
      */
     static File renameByAddingNumber(File folder, int numberOfZeros, int countFiles, String fileName) {
         return Paths.get(
@@ -123,13 +123,13 @@ class Util {
     }
 
     /**
-     * Удаляет нумерацию из имени файла или папки.
+     * Removes numbering from the file or folder name.
      *
-     * @param   folder    Директория рассматриваемой папки
-     * @param   fileName  Имя файла или папки
-     * @param   counter   Указатель, с какого места нужно брать подстроку для нового имени файла
+     * @param   folder    Directory of specified folder
+     * @param   fileName  File or folder name
+     * @param   counter   A pointer from where you need to take a substring for a new file or folder name
      *
-     * @return  Новое полное имя файла с добавленной нумерацией в начале его имени
+     * @return  New full filename with the numbering removed at the beginning of its name
      */
     static File renameByDeletingNumber(File folder, String fileName, int counter) {
         return Paths.get(
@@ -138,24 +138,24 @@ class Util {
     }
 
     /**
-     * Кладет в мапу введенные расширения (key) и количество их вхождений (value).
+     * Inserts into the map entered extensions (key) and the number of their occurrences (value).
      *
-     * @param   extensions  Массив введенных расширений
-     * @param   listFiles   Список файлов, находящийся в заданной папке
+     * @param   extensions  Array of entered extensions
+     * @param   listFiles   The list of files in the specified folder
      *
-     * @return  Мапа с расширениями и количеством их вхождений
+     * @return  Map with entered extensions and the number of their occurrences
      */
     static Map<String, Integer> putExtensions(String[] extensions, File[] listFiles) {
         Map<String, Integer> extensionsInDir = new HashMap<>();
         String fileToString,
                currentExtension;
 
-        //добавляем в мапу введенные расширения
+        //adds into map entered extensions
         for (String ex : extensions) {
             extensionsInDir.put(ex, 0);
         }
 
-        //считаем количество вхождений для каждого расширения
+        //count the number of occurrences for each extension
         for (File file : listFiles) {
             if (!file.isDirectory()) {
                 fileToString = file.toString();
@@ -174,18 +174,18 @@ class Util {
     }
 
     /**
-     * Кладет в мапу все расширения (key) из папки и количество их вхождений (value).
+     * Inserts into the map all extensions (key) from folder and the number of their occurrences (value).
      *
-     * @param   listFiles  Список файлов, находящийся в заданной папке
+     * @param   listFiles  The list of files in the specified folder
      *
-     * @return  Мапа с расширениями и количеством их вхождений
+     * @return  Map with entered extensions and the number of their occurrences
      */
     static Map<String, Integer> putAllExtensions(File[] listFiles) {
         Map<String, Integer> extensionsInDir = new HashMap<>();
         String fileToString,
                currentExtension;
 
-        //находим все расширения в папке и считаем их количество
+        //find all extensions in the folder and count their number
         for (File file : listFiles) {
             if (!file.isDirectory()) {
                 fileToString = file.toString();
@@ -202,11 +202,11 @@ class Util {
     }
 
     /**
-     * Проверяет есть ли в имени данного файла более одной точки.
+     * Checks if there is more than one point in the name of this file or folder.
      *
-     * @param   fileName  Имя проверяемого файла
+     * @param   fileName  File or folder name for check
      *
-     * @return  {@code true}, если количество точек более одной
+     * @return  {@code true}, if the number of points is more than one (if not, then it's only folder)
      */
     static boolean countOfPointMoreThanOne(String fileName) {
         int count = 0;
@@ -222,14 +222,14 @@ class Util {
     }
 
     /**
-     * Проверяет наличие разделителя в имени файла или папки.
-     * <p> Поддерживаемые паттерны:
+     * Checks for a separator in a file or folder name.
+     * <p> Supported patterns:
      * "_" , " - " , " " , "-" , ". "
      *
-     * @param   fileName  Имя проверяемого файла или папки
-     * @param   counter   Указатель, с какого места начинается проверка
+     * @param   fileName  File of folder name for check
+     * @param   counter   Pointer, where does the check start
      *
-     * @return  {@code true}, если найден один из видов разделителей
+     * @return  {@code true}, if one of the types of separators is found
      */
     private static boolean checkForSeparators(String fileName, int counter) {
         return fileName.regionMatches(counter, "_",  0, 1) ||
@@ -240,13 +240,13 @@ class Util {
     }
 
     /**
-     * Проверяет наличие разделителя в имени файла.
-     * <p> Помимо паттернов из {@link #checkForSeparators(String, int)} добавляется паттерн ".".
+     * Checks for a separator in a file name.
+     * <p> In addition to the patterns from {@link #checkForSeparators (String, int)}, a pattern ".".
      *
-     * @param   fileName  Имя проверяемого файла
-     * @param   counter   Указатель, с какого места начинается проверка
+     * @param   fileName  File name for check
+     * @param   counter   Pointer, where does the check start
      *
-     * @return  {@code true}, если найден один из видов разделителей (в том числе и из {@link #checkForSeparators(String, int)})
+     * @return  {@code true}, if one of the types of separators is found (including from {@link #checkForSeparators(String, int)})
      */
     static boolean checkForSeparatorsInFile(String fileName, int counter) {
         return checkForSeparators(fileName, counter) ||
@@ -254,13 +254,13 @@ class Util {
     }
 
     /**
-     * Проверяет наличие разделителя в имени папки.
-     * <p> Помимо паттернов из {@link #checkForSeparators(String, int)} добавляется паттерн ".".
+     * Checks for a separator in a folder name.
+     * <p> In addition to the patterns from {@link #checkForSeparators (String, int)}, a pattern ".".
      *
-     * @param   folderName  Имя проверяемой папки
-     * @param   counter     Указатель, с какого места начинается проверка
+     * @param   folderName  Folder name for check
+     * @param   counter     Pointer, where does the check start
      *
-     * @return  {@code true}, если найден один из видов разделителей (в том числе и из {@link #checkForSeparators(String, int)})
+     * @return  {@code true}, if one of the types of separators is found (including from {@link #checkForSeparators(String, int)})
      */
     static boolean checkForSeparatorsInFolder(String folderName, int counter) {
         return checkForSeparators(folderName, counter) ||
@@ -268,12 +268,12 @@ class Util {
     }
 
     /**
-     * Подсчитывает длину разделителя в проверяемом файле или папке.
+     * Counts length of the separator in file or folder.
      *
-     * @param   fileName  Имя проверяемого файла или папки
-     * @param   counter   Указатель, с какого места начинается проверка
+     * @param   fileName  File or folder name
+     * @param   counter   Pointer, where does the check start
      *
-     * @return  Длина разделителя
+     * @return  The length of separator
      */
     static int getLengthOfSeparator(String fileName, int counter) {
         List<String> separators = new ArrayList<>();
@@ -293,31 +293,31 @@ class Util {
             }
         }
 
-        //не должен срабатывать, поскольку в условии имеется проверка на разделители
+        //it shouldn't work, since there is a condition for checking separator
         return 0;
     }
 
     /**
-     * Проверяет, является ли данный файл файлом и если да, то есть ли у этого файла разделители.
+     * Checks whether the file is a file. If so, does this file have separator.
      *
-     * @param   file      Проверяемый файл
-     * @param   fileName  Имя проверяемого файла
-     * @param   counter   Указатель, с какого места начинается проверка
+     * @param   file      File for check
+     * @param   fileName  File name
+     * @param   counter   Pointer, where does the check start
      *
-     * @return  {@code true}, если это файл с разделителем
+     * @return  {@code true}, if it's a file with separator
      */
     static boolean checkFile(File file, String fileName, int counter) {
         return !file.isDirectory() && Util.checkForSeparatorsInFile(fileName, counter);
     }
 
     /**
-     * Проверяет, является ли данный файл папкой и если да, то есть ли у этой папки разделители.
+     * Checks whether the file is a folder. If so, does this folder have separator.
      *
-     * @param   file      Проверяемый файл
-     * @param   fileName  Имя проверяемого файла
-     * @param   counter   Указатель, с какого места начинается проверка
+     * @param   file      File for check
+     * @param   fileName  File name
+     * @param   counter   Pointer, where does the check start
      *
-     * @return  {@code true}, если это папка с разделителем
+     * @return  {@code true}, if it's a folder with separator
      */
     static boolean checkFolder(File file, String fileName, int counter) {
         return file.isDirectory() && Util.checkForSeparatorsInFolder(fileName, counter);

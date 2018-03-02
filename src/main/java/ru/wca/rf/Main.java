@@ -7,16 +7,16 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 /**
- * Переименование файлов в заданной папке.
+ * Renaming files in specified folder.
  *
- * <p> Программа предназначена для переименования файлов в определенной папке.
- * Переименование файлов происходит несколькими способами в зависимости от введенного номера команды.
- * Описание каждой команды дается сразу же после старта программы.
+ * <p> The program was developed to rename files in a specific folder.
+ * Renaming files occurs in several ways, depending on the entered command number.
+ * The description of each command is given immediately after starting the program.
  *
- * <p> Используйте консоль для работы с данной программой.
+ * <p> Use the console to work with this program.
  *
- * <p> Смотри <a href="https://github.com/WindCrowAya/sample/blob/master/src/main/java/my_examples/RenamingFilesClass.java">старую</a>
- * и <a href="https://github.com/WindCrowAya/renaming_files">новую</a> истории изменения проекта.
+ * <p> See <a href="https://github.com/WindCrowAya/sample/blob/master/src/main/java/my_examples/RenamingFilesClass.java">old</a>
+ *     and <a href="https://github.com/WindCrowAya/renaming_files">new</a> histories of project change.
  *
  * @author <a href="https://github.com/WindCrowAya">WindCrowAya</a>
  */
@@ -24,10 +24,10 @@ import java.util.*;
 public class Main {
 
     /**
-     * Основной метод по переименованию файлов. Здесь находится основная работа программы.
+     * The main method for renaming files. Here is the main work of the program.
      */
     private static void renameFiles() throws IOException {
-        //задаем свойство для чтения кириллицы в консоли, если она присутствует в директории
+        //set the property to read Cyrillic in the console, if it's present in the directory (for Russian language)
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in,
                 System.getProperty("console.encoding", "cp866")));
 
@@ -55,27 +55,27 @@ public class Main {
 
         System.out.print(
                 "\n" +
-                "+-------------------------------+\n" +
-                "| Переименование файлов в папке |\n" +
-                "+-------------------------------+\n\n" +
-                "Как работать с данной программой:\n" +
-                "1. Прописывайте путь к папке.\n" +
-                "2. Воспользуйтесь специальной командой, введя его id:\n" +
-                "-> 1 :        (all) переименование всех файлов подряд и отдельно папок\n" +
-                "-> 2 :     (rename) переименование по каждому введенному расширению\n" +
-                "-> 3 :    (add num) добавляет к названиям файлов порядковый номер\n" +
-                "-> 4 : (delete num) удаляет нумерацию файлов по введенным расширениям\n" +
-                "-> 5 : (delete all) удаляет нумерацию каждого файла\n" +
-                "-> 6 : (rename all) преобразование по умолчанию, переименование всех файлов по расширениям\n" +
-                "                      (вместо ввода этой команды достаточно нажать Enter, оставив поле ввода пустым)\n" +
-                "3. Прописывайте расширения через запятую, для переименования папок введите \"folders\"\n\n");
+                "+------------------------------------+\n" +
+                "| Renaming files in specified folder |\n" +
+                "+------------------------------------+\n\n" +
+                "How to work with this program:\n" +
+                "1. Enter the path to the folder.\n" +
+                "2. Use the special command by entering id:\n" +
+                "-> 1 :        (all) rename all files and folders individually\n" +
+                "-> 2 :     (rename) rename for each entered extension\n" +
+                "-> 3 :    (add num) add the serial number to the file names\n" +
+                "-> 4 : (delete num) remove numbering of files for each entered extensions\n" +
+                "-> 5 : (delete all) remove numbering for each file\n" +
+                "-> 6 : (rename all) default, renaming all files by extension\n" +
+                "                   (instead of entering this command, just press Enter, leaving the input field empty)\n" +
+                "3. Write extensions separated by commas, to rename the folders enter \"folders\"\n\n");
         do {
-            System.out.print("Введите путь: ");
+            System.out.print("Enter the path: ");
             path = reader.readLine().trim();
 
             pathIsEmpty = Util.isEmpty(path);
             if (pathIsEmpty) {
-                System.out.print("Пустой запрос. Повторите ввод заново, начиная с пути: ");
+                System.out.print("Blank query. Re-enter, starting with the path: ");
                 continue;
             }
 
@@ -84,18 +84,18 @@ public class Main {
 
             listFilesIsEmpty = (listFiles == null) || listFiles.length == 0;
             if (listFilesIsEmpty) {
-                System.out.print("Файлов в папке нет или такого пути не существует. Повторите ввод заново, начиная с пути: ");
+                System.out.print("There aren't files in the folder or the path entered doesn't exist. Re-enter, starting with the path: ");
                 continue;
             }
 
 
-            System.out.print("Введите команду: ");
+            System.out.print("Enter the command: ");
             command = reader.readLine().trim();
 
             if ("2".equals(command) ||
                 "3".equals(command) ||
                 "4".equals(command)) {
-                //ничего не делаем, поскольку введенная команда обрабатывает все файлы в папке
+                //do nothing, because the entered command processes all files in the folder
             } else if (Util.isEmpty(command) || "6".equals(command)) {
                 defIsEnabled = true;
             } else if ("1".equals(command)) {
@@ -103,19 +103,19 @@ public class Main {
             } else if ("5".equals(command)) {
                 delPlusIsEnabled = true;
             } else {
-                System.out.print("Некорректная команда. Повторите ввод заново, начиная с пути: ");
+                System.out.print("Incorrect command. Re-enter, starting with the path: ");
                 continue;
             }
 
 
-            //если введенная команда не обрабатывает все файлы, то вводим расширения нужных файлов
+            //if the entered command does not process all files, then we enter extensions of the necessary files
             if (!allIsEnabled && !defIsEnabled && !delPlusIsEnabled) {
-                System.out.print("Введите расширения: ");
+                System.out.print("Enter extensions: ");
                 stringOfExtensions = reader.readLine().trim();
 
                 stringOfExtensionsIsEmpty = Util.isEmpty(stringOfExtensions);
                 if (stringOfExtensionsIsEmpty) {
-                    System.out.print("Пустой запрос. Повторите ввод заново, начиная с пути: ");
+                    System.out.print("Blank query. Re-enter, starting with the path: ");
                     continue;
                 }
 
@@ -126,7 +126,7 @@ public class Main {
                 extensions = Util.removeDuplicates(extensions);
 
                 if (extensions.length < 1) {
-                    System.out.print("Не введены расширения. Повторите ввод заново, начиная с пути: ");
+                    System.out.print("No extensions entered. Re-enter, starting with the path: ");
                 }
             } else {
                 stringOfExtensionsIsEmpty = false;
@@ -135,7 +135,7 @@ public class Main {
             } while (pathIsEmpty || listFilesIsEmpty || stringOfExtensionsIsEmpty);
 
 
-        //подсчитываем количество папок, файлов и нулей перед ними
+        //count the number of folders, files and zeros in front of them
         for (File file : listFiles) {
             if (file.isDirectory()) {
                 numberOfFolders++;
@@ -146,7 +146,7 @@ public class Main {
         numberOfZerosToFiles = String.valueOf(numberOfFiles).length() - 1;
 
 
-        //обработка выбранной команды
+        //processing the selected command
         switch (command) {
             case "1":
                 executeCommandAll(listFiles, folder, numberOfZerosToFiles, numberOfZerosToFolders);
@@ -180,26 +180,26 @@ public class Main {
                 break;
             }
 
-            System.out.println("Переименование завершено.");
+            System.out.println("Rename completed.");
         }
 
     /**
-     * Команда "all" переименовывает все файлы подряд и отдельно папки.
+     * Command "all" renames all files and folders individually.
      *
-     * @param listFiles                Список файлов, находящийся в заданной папке
-     * @param folder                   Заданная папка
-     * @param numberOfZerosToFiles     Количество нулей, добавляемое к началу нумерации файла
-     * @param numberOfZerosToFolders   Количество нулей, добавляемое к началу нумерации папки
+     * @param listFiles                The list of files in the specified folder
+     * @param folder                   Specified folder
+     * @param numberOfZerosToFiles     The number of zeros added to the beginning of file numbering
+     * @param numberOfZerosToFolders   The number of zeros added to the beginning of folder numbering
      */
     static void executeCommandAll(File[] listFiles, File folder, int numberOfZerosToFiles, int numberOfZerosToFolders) {
         String fileToString,
                currentExtension;
 
         int countFilesWithAnyExtension = 0,
-            numberOfZerosToFoldersTemp = numberOfZerosToFolders,  //Codacy: изменение входного параметра нежелательно; введена temp-переменная
+            numberOfZerosToFoldersTemp = numberOfZerosToFolders,  //Codacy: the change in the input parameter is undesirable; temp-variable is introduced
             countDirectories = 0;
 
-        //проходим по всему списку файлов
+        //pass through the file list
         for (File file : listFiles) {
             if (!file.isDirectory()) {
                 fileToString = file.toString();
@@ -223,12 +223,12 @@ public class Main {
     }
 
     /**
-     * Команда "rename" переименовывает файлы по каждому введенному расширению.
+     * Command "rename" renames for each entered extension.
      *
-     * @param listFiles                Список файлов, находящийся в заданной папке
-     * @param folder                   Заданная папка
-     * @param numberOfZerosToFolders   Количество нулей, добавляемое к началу нумерации папки
-     * @param extensions               Массив введенных расширений
+     * @param listFiles                The list of files in the specified folder
+     * @param folder                   Specified folder
+     * @param numberOfZerosToFolders   The number of zeros added to the beginning of the folder numbering
+     * @param extensions               Array of entered extensions
      */
     static void executeCommandRename(File[] listFiles, File folder, int numberOfZerosToFolders, String[] extensions) {
         String fileToString,
@@ -236,13 +236,13 @@ public class Main {
 
         int countFilesWithCurrentExtension,
             numberOfZerosToFilesWithCurrentEx,
-            numberOfZerosToFoldersTemp = numberOfZerosToFolders,  //Codacy: изменение входного параметра нежелательно; введена temp-переменная
+            numberOfZerosToFoldersTemp = numberOfZerosToFolders,  //Codacy: the change in the input parameter is undesirable; temp-variable is introduced
             countDirectories = 0;
 
-        //мапа с ключом-значением: расширение-количество вхождений
+        //map with key-value: extension-number of occurrences
         Map<String, Integer> extensionsInDir = Util.putExtensions(extensions, listFiles);
 
-        //проходим по мапе, по каждому введенному расширению
+        //pass through the map, for each entered extension
         for (Map.Entry<String, Integer> ex : extensionsInDir.entrySet()) {
             numberOfZerosToFilesWithCurrentEx = String.valueOf(ex.getValue()).length() - 1;
             if (!ex.getKey().equals("folders")) {
@@ -278,12 +278,12 @@ public class Main {
     }
 
     /**
-     * Команда "add num" добавляет к названиям файлов порядковый номер.
+     * Command "add num" removes numbering of files for each entered extensions.
      *
-     * @param listFiles                Список файлов, находящийся в заданной папке
-     * @param folder                   Заданная папка
-     * @param numberOfZerosToFolders   Количество нулей, добавляемое к началу нумерации папки
-     * @param extensions               Массив введенных расширений
+     * @param listFiles                The list of files in the specified folder
+     * @param folder                   Specified folder
+     * @param numberOfZerosToFolders   The number of zeros added to the beginning of the folder numbering
+     * @param extensions               Array of entered extensions
      */
     static void executeCommandAdd(File[] listFiles, File folder, int numberOfZerosToFolders, String[] extensions) {
         String fileToString,
@@ -291,13 +291,13 @@ public class Main {
 
         int countFilesWithCurrentExtension,
             numberOfZerosToFilesWithCurrentEx,
-            numberOfZerosToFoldersTemp = numberOfZerosToFolders,  //Codacy: изменение входного параметра нежелательно; введена temp-переменная
+            numberOfZerosToFoldersTemp = numberOfZerosToFolders,  //Codacy: the change in the input parameter is undesirable; temp-variable is introduced
             countDirectories = 0;
 
-        //мапа с ключом-значением: расширение-количество вхождений
+        //map with key-value: extension-number of occurrences
         Map<String, Integer> extensionsInDir = Util.putExtensions(extensions, listFiles);
 
-        //проходим по мапе, по каждому введенному расширению
+        //pass through the map, for each entered extension
         for (Map.Entry<String, Integer> ex : extensionsInDir.entrySet()) {
             numberOfZerosToFilesWithCurrentEx = String.valueOf(ex.getValue()).length() - 1;
             if (!ex.getKey().equals("folders")) {
@@ -334,18 +334,18 @@ public class Main {
     }
 
     /**
-     * Команда "delete num" удаляет нумерацию файлов по введенным расширениям.
-     * <p> Используется в цикле, обход в котором идет по расширениям.
-     * <p> Флаги {@code isItFolder} и {@code isItFiles} должны иметь разные значения.
+     * Command "delete num" removes numbering of files for each entered extensions.
+     * <p> Used in a loop that bypasses extensions.
+     * <p> Flags {@code isItFolder} and {@code isItFiles} must have different values.
      *
-     * <p> Команда "delete all" удаляет нумерацию каждого файла в папке.
-     * <p> Флаги {@code isItFolder} и {@code isItFiles} должны иметь значение {@code true}.
+     * <p> Command "delete all" removes numbering for each file in the folder.
+     * <p> Flags {@code isItFolder} and {@code isItFiles} must be {@code true}.
      *
-     * @param isItFolders   Флаг указывает, будут ли обрабатываться папки
-     * @param isItFiles     Флаг указывает, будут ли обрабатываться файлы
-     * @param listFiles     Список файлов, находящийся в заданной папке в данной итерации
-     * @param extension     Текущее расширение в данной итерации
-     * @param folder        Заданная папка
+     * @param isItFolders   The flag indicates whether folders will be processed
+     * @param isItFiles     The flag indicates whether files will be processed
+     * @param listFiles     The list of files in the specified folder in the iteration
+     * @param extension     The current extension in the iteration
+     * @param folder        Specified folder
      */
     static void executeCommandDel(boolean isItFolders, boolean isItFiles, File[] listFiles, String extension, File folder) {
         String fileName,
@@ -364,11 +364,11 @@ public class Main {
             fileNameCharArray = fileName.toCharArray();
             fileToString = file.toString();
             if (!file.isDirectory()) {
-                fileNameWithoutEx = fileName.substring(0, fileName.lastIndexOf(".")).trim();    //имя файла без расширения
+                fileNameWithoutEx = fileName.substring(0, fileName.lastIndexOf(".")).trim();    //file name without extension
                 fileNameWithoutExCharArray = fileNameWithoutEx.toCharArray();
                 for (int i = 0; i < fileNameWithoutExCharArray.length; i++) {
-                    if (Character.isDigit(fileNameWithoutExCharArray[i])) {     //проверка, есть ли в начале имени файла цифры
-                        if (i + 1 == fileNameWithoutExCharArray.length) {       //если файл состоит целиком из цифр, то удаления цифр не будет
+                    if (Character.isDigit(fileNameWithoutExCharArray[i])) {     //checks if there are numbers at the beginning of the file name
+                        if (i + 1 == fileNameWithoutExCharArray.length) {       //if the file name consists only of digits, then the digits will not be deleted
                             continue search;
                         }
                     } else {
@@ -386,18 +386,18 @@ public class Main {
                     }
                 }
             }
-            if ((isItFiles && fileToString.substring(fileToString.lastIndexOf(".") + 1).equals(extension)) ||   //только файлы
-                (isItFiles && isItFolders) ||                                                                       //папки и файлы
-                (isItFolders && file.isDirectory())) {                                                              //только папки
-                for (int i = 0; !separatorIsFound; i++) {   //поиск разделителя, если его нет, то прекращаем поиск
+            if ((isItFiles && fileToString.substring(fileToString.lastIndexOf(".") + 1).equals(extension)) ||   //files only
+                (isItFiles && isItFolders) ||                                                                       //folders & files
+                (isItFolders && file.isDirectory())) {                                                              //folders only
+                for (int i = 0; !separatorIsFound; i++) {   //search for separator in the file name, if not, then stop search
                     if (Character.isDigit(fileNameCharArray[i])) {
                         numberIsFound = true;
-                    } else if (numberIsFound && (Util.checkFile(file, fileName, i) ||   //проверка наличия числа на удаление и проверка на наличие разделителя
-                                                 Util.checkFolder(file, fileName, i))) {
+                    } else if (numberIsFound && (Util.checkFile(file, fileName, i) ||       //checking for the presence of a number to delete
+                                                 Util.checkFolder(file, fileName, i))) {    //and for the presence of a separator
                         file.renameTo(Util.renameByDeletingNumber(
                                 folder,
                                 fileName,
-                                (i - 1) + Util.getLengthOfSeparator(fileName, i)));  //здесь (i - 1) - смещение указателя
+                                (i - 1) + Util.getLengthOfSeparator(fileName, i)));  //(i - 1) is the pointer offset
                         separatorIsFound = true;
                     } else {
                         break;
@@ -410,12 +410,12 @@ public class Main {
     }
 
     /**
-     * Команда "rename all" добавляет к названиям файлов порядковый номер.
-     * <p> Является командой по умолчанию.
+     * Command "rename all" renames all files by extension.
+     * <p> Default command.
      *
-     * @param listFiles                Список файлов, находящийся в заданной папке
-     * @param folder                   Заданная папка
-     * @param numberOfZerosToFolders   Количество нулей, добавляемое к началу нумерации папки
+     * @param listFiles                The list of files in the specified folder
+     * @param folder                   Specified folder
+     * @param numberOfZerosToFolders   The number of zeros added to the beginning of the folder numbering
      */
     static void executeCommandRenameAll(File[] listFiles, File folder, int numberOfZerosToFolders) {
         String fileToString,
@@ -423,13 +423,13 @@ public class Main {
 
         int countFilesWithCurrentExtension,
             numberOfZerosToFilesWithCurrentEx,
-            numberOfZerosToFoldersTemp = numberOfZerosToFolders,  //Codacy: изменение входного параметра нежелательно; введена temp-переменная
+            numberOfZerosToFoldersTemp = numberOfZerosToFolders,  //Codacy: the change in the input parameter is undesirable; temp-variable is introduced
             countDirectories = 0;
 
-        //мапа с ключом-значением: расширение-количество вхождений
+        //map with key-value: extension-number of occurrences
         Map<String, Integer> extensionsInDir = Util.putAllExtensions(listFiles);
 
-        //проходим по мапе, по каждому введенному расширению
+        //pass through the map, for each entered extension
         for (Map.Entry<String, Integer> ex : extensionsInDir.entrySet()) {
             countFilesWithCurrentExtension = 0;
             numberOfZerosToFilesWithCurrentEx = String.valueOf(ex.getValue()).length() - 1;
@@ -459,13 +459,12 @@ public class Main {
     }
 
     /**
-     * Метод, исполняющий работу программы.
+     * The method of executing the program.
      */
     public static void main(String[] args) {
         try {
             renameFiles();
         } catch (IOException e) {
-            System.err.println("Ошибка ввода/вывода!");
             e.printStackTrace();
         }
     }
