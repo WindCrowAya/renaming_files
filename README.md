@@ -19,4 +19,12 @@ How to work with this program:
 2. Use the special command by entering id;
 3. (For commands №1,№5 и №6) Write extensions separated by commas, to rename the folders enter "folders".
 ##
+Patterns of commands "delete num" (4) and "delete all" (5):
+- Space (1 fileName);
+- Point-space (1. fileName);
+- Point (1.fileName);
+- Dash (1-fileName);
+- Space-dash-space (1 - fileName);
+- Underscore (1_fileName).
+##
 The first stages of the project see [here](https://github.com/WindCrowAya/sample/blob/master/src/main/java/my_examples/RenamingFilesClass.java).
