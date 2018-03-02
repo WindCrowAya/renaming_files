@@ -61,16 +61,16 @@ public class Main {
                 "How to work with this program:\n" +
                 "1. Enter the path to the folder.\n" +
                 "2. Use the special command by entering id:\n" +
-                "-> 1 :        (all) rename all files and folders individually\n" +
-                "-> 2 :     (rename) rename for each entered extension\n" +
-                "-> 3 :    (add num) add the serial number to the file names\n" +
-                "-> 4 : (delete num) remove numbering of files for each entered extensions\n" +
-                "-> 5 : (delete all) remove numbering for each file\n" +
-                "-> 6 : (rename all) default, renaming all files by extension\n" +
-                "                   (instead of entering this command, just press Enter, leaving the input field empty)\n" +
-                "3. Write extensions separated by commas, to rename the folders enter \"folders\"\n\n");
+                "-> 1 :        (all) rename all files and folders individually;\n" +
+                "-> 2 :     (rename) rename for each entered extension;\n" +
+                "-> 3 :    (add num) add the serial number to the file names;\n" +
+                "-> 4 : (delete num) remove numbering of files for each entered extensions;\n" +
+                "-> 5 : (delete all) remove numbering for each file;\n" +
+                "-> 6 : (rename all) default, renaming all files by extension;\n" +
+                "                   (instead of entering this command, just press Enter, leaving the input field empty).\n" +
+                "3. Write extensions separated by commas, to rename the folders enter \"folders\".\n\n" +
+                "Enter the path: ");
         do {
-            System.out.print("Enter the path: ");
             path = reader.readLine().trim();
 
             pathIsEmpty = Util.isEmpty(path);
