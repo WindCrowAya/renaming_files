@@ -10,7 +10,7 @@ import java.util.*;
  * Renaming files in specified folder.
  *
  * <p> The program was developed to rename files in a specific folder.
- * Renaming files occurs in several ways, depending on the entered command number.
+ * Renaming files is performed in several ways, depending on the entered command number.
  * The description of each command is given immediately after starting the program.
  *
  * <p> Use the console to work with this program.
@@ -223,7 +223,7 @@ public class Main {
     }
 
     /**
-     * Command "rename" renames for each entered extension.
+     * Command "rename" renames files for each entered extension.
      *
      * @param listFiles                The list of files in the specified folder
      * @param folder                   Specified folder
@@ -278,7 +278,7 @@ public class Main {
     }
 
     /**
-     * Command "add num" removes numbering of files for each entered extensions.
+     * Command "add num" removes numbering of files for each entered extension.
      *
      * @param listFiles                The list of files in the specified folder
      * @param folder                   Specified folder
@@ -334,7 +334,7 @@ public class Main {
     }
 
     /**
-     * Command "delete num" removes numbering of files for each entered extensions.
+     * Command "delete num" removes numbering of files for each entered extension.
      * <p> Used in a loop that bypasses extensions.
      * <p> Flags {@code isItFolder} and {@code isItFiles} must have different values.
      *

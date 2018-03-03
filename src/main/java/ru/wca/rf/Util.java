@@ -51,7 +51,7 @@ class Util {
     /**
      * Changes the number of zeros before numbering numbers.
      *
-     * @param   numberOfZeros                   Number of zeros to check
+     * @param   numberOfZeros                   Number of zeros for checking
      * @param   countFilesWithCurrentExtension  Count of files with current extension
      *
      * @return  Changed the number of zeros
@@ -138,7 +138,7 @@ class Util {
     }
 
     /**
-     * Inserts into the map entered extensions (key) and the number of their occurrences (value).
+     * Inserts entered extensions (key) and the number of their occurrences (value) into the map.
      *
      * @param   extensions  Array of entered extensions
      * @param   listFiles   The list of files in the specified folder
@@ -150,7 +150,7 @@ class Util {
         String fileToString,
                currentExtension;
 
-        //adds into map entered extensions
+        //adds entered extensions into the map
         for (String ex : extensions) {
             extensionsInDir.put(ex, 0);
         }
@@ -174,7 +174,7 @@ class Util {
     }
 
     /**
-     * Inserts into the map all extensions (key) from folder and the number of their occurrences (value).
+     * Inserts all extensions (key) from folder and the number of their occurrences (value) into the map.
      *
      * @param   listFiles  The list of files in the specified folder
      *
@@ -204,7 +204,7 @@ class Util {
     /**
      * Checks if there is more than one point in the name of this file or folder.
      *
-     * @param   fileName  File or folder name for check
+     * @param   fileName  File or folder name for checking
      *
      * @return  {@code true}, if the number of points is more than one (if not, then it's only folder)
      */
@@ -226,8 +226,8 @@ class Util {
      * <p> Supported patterns:
      * "_" , " - " , " " , "-" , ". "
      *
-     * @param   fileName  File of folder name for check
-     * @param   counter   Pointer, where does the check start
+     * @param   fileName  File of folder name for checking
+     * @param   counter   Pointer, where the checking starts
      *
      * @return  {@code true}, if one of the types of separators is found
      */
@@ -243,8 +243,8 @@ class Util {
      * Checks for a separator in a file name.
      * <p> In addition to the patterns from {@link #checkForSeparators (String, int)}, a pattern ".".
      *
-     * @param   fileName  File name for check
-     * @param   counter   Pointer, where does the check start
+     * @param   fileName  File name for checking
+     * @param   counter   Pointer, where the checking starts
      *
      * @return  {@code true}, if one of the types of separators is found (including from {@link #checkForSeparators(String, int)})
      */
@@ -257,8 +257,8 @@ class Util {
      * Checks for a separator in a folder name.
      * <p> In addition to the patterns from {@link #checkForSeparators (String, int)}, a pattern ".".
      *
-     * @param   folderName  Folder name for check
-     * @param   counter     Pointer, where does the check start
+     * @param   folderName  Folder name for checking
+     * @param   counter     Pointer, where the checking starts
      *
      * @return  {@code true}, if one of the types of separators is found (including from {@link #checkForSeparators(String, int)})
      */
@@ -271,7 +271,7 @@ class Util {
      * Counts length of the separator in file or folder.
      *
      * @param   fileName  File or folder name
-     * @param   counter   Pointer, where does the check start
+     * @param   counter   Pointer, where the checking starts
      *
      * @return  The length of separator
      */
@@ -298,11 +298,11 @@ class Util {
     }
 
     /**
-     * Checks whether the file is a file. If so, does this file have separator.
+     * Checks whether the file is a file. If so, checks whether this file has a separator.
      *
-     * @param   file      File for check
+     * @param   file      File for checking
      * @param   fileName  File name
-     * @param   counter   Pointer, where does the check start
+     * @param   counter   Pointer, where the checking starts
      *
      * @return  {@code true}, if it's a file with separator
      */
@@ -311,11 +311,11 @@ class Util {
     }
 
     /**
-     * Checks whether the file is a folder. If so, does this folder have separator.
+     * Checks whether the file is a folder. If so, checks whether this folder has a separator.
      *
-     * @param   file      File for check
+     * @param   file      File for checking
      * @param   fileName  File name
-     * @param   counter   Pointer, where does the check start
+     * @param   counter   Pointer, where the checking starts
      *
      * @return  {@code true}, if it's a folder with separator
      */
