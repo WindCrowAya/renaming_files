@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
+import static ru.wca.rf.Util.*;
+
 /**
  * Renaming files in specified folder.
  *
@@ -73,7 +75,7 @@ public class Main {
         do {
             path = reader.readLine().trim();
 
-            pathIsEmpty = Util.isEmpty(path);
+            pathIsEmpty = isEmpty(path);
             if (pathIsEmpty) {
                 System.out.print("Blank query. Re-enter, starting with the path: ");
                 continue;
@@ -96,7 +98,7 @@ public class Main {
                 "3".equals(command) ||
                 "4".equals(command)) {
                 //do nothing, because the entered command processes all files in the folder
-            } else if (Util.isEmpty(command) || "6".equals(command)) {
+            } else if (isEmpty(command) || "6".equals(command)) {
                 defIsEnabled = true;
             } else if ("1".equals(command)) {
                 allIsEnabled = true;
@@ -113,7 +115,7 @@ public class Main {
                 System.out.print("Enter extensions: ");
                 stringOfExtensions = reader.readLine().trim();
 
-                stringOfExtensionsIsEmpty = Util.isEmpty(stringOfExtensions);
+                stringOfExtensionsIsEmpty = isEmpty(stringOfExtensions);
                 if (stringOfExtensionsIsEmpty) {
                     System.out.print("Blank query. Re-enter, starting with the path: ");
                     continue;
@@ -123,7 +125,7 @@ public class Main {
                 for (int i = 0; i < extensions.length; i++) {
                     extensions[i] = extensions[i].toLowerCase().trim();
                 }
-                extensions = Util.removeDuplicates(extensions);
+                extensions = removeDuplicates(extensions);
 
                 if (extensions.length < 1) {
                     System.out.print("No extensions entered. Re-enter, starting with the path: ");
@@ -204,17 +206,17 @@ public class Main {
             if (!file.isDirectory()) {
                 fileToString = file.toString();
                 currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
-                file.renameTo(Util.renameToNumbersFiles(
+                file.renameTo(renameToNumbersFiles(
                         folder,
-                        numberOfZerosToFiles = Util.changeNumberOfZeros(
+                        numberOfZerosToFiles = changeNumberOfZeros(
                                 numberOfZerosToFiles,
                                 countFilesWithAnyExtension),
                         ++countFilesWithAnyExtension,
                         currentExtension));
             } else {
-                file.renameTo(Util.renameToNumbersFolders(
+                file.renameTo(renameToNumbersFolders(
                         folder,
-                        numberOfZerosToFoldersTemp = Util.changeNumberOfZeros(
+                        numberOfZerosToFoldersTemp = changeNumberOfZeros(
                                 numberOfZerosToFoldersTemp,
                                 countDirectories),
                         ++countDirectories));
@@ -240,7 +242,7 @@ public class Main {
             countDirectories = 0;
 
         //map with key-value: extension-number of occurrences
-        Map<String, Integer> extensionsInDir = Util.putExtensions(extensions, listFiles);
+        Map<String, Integer> extensionsInDir = putExtensions(extensions, listFiles);
 
         //pass through the map, for each entered extension
         for (Map.Entry<String, Integer> ex : extensionsInDir.entrySet()) {
@@ -252,9 +254,9 @@ public class Main {
                         fileToString = file.toString();
                         currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
                         if (currentExtension.equals(ex.getKey())) {
-                            file.renameTo(Util.renameToNumbersFiles(
+                            file.renameTo(renameToNumbersFiles(
                                     folder,
-                                    numberOfZerosToFilesWithCurrentEx = Util.changeNumberOfZeros(
+                                    numberOfZerosToFilesWithCurrentEx = changeNumberOfZeros(
                                             numberOfZerosToFilesWithCurrentEx,
                                             countFilesWithCurrentExtension),
                                     ++countFilesWithCurrentExtension,
@@ -265,9 +267,9 @@ public class Main {
             } else {
                 for (File file : listFiles) {
                     if (file.isDirectory()) {
-                        file.renameTo(Util.renameToNumbersFolders(
+                        file.renameTo(renameToNumbersFolders(
                                 folder,
-                                numberOfZerosToFoldersTemp = Util.changeNumberOfZeros(
+                                numberOfZerosToFoldersTemp = changeNumberOfZeros(
                                         numberOfZerosToFoldersTemp,
                                         countDirectories),
                                 ++countDirectories));
@@ -295,7 +297,7 @@ public class Main {
             countDirectories = 0;
 
         //map with key-value: extension-number of occurrences
-        Map<String, Integer> extensionsInDir = Util.putExtensions(extensions, listFiles);
+        Map<String, Integer> extensionsInDir = putExtensions(extensions, listFiles);
 
         //pass through the map, for each entered extension
         for (Map.Entry<String, Integer> ex : extensionsInDir.entrySet()) {
@@ -307,9 +309,9 @@ public class Main {
                         fileToString = file.toString();
                         currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
                         if (currentExtension.equals(ex.getKey())) {
-                            file.renameTo(Util.renameByAddingNumber(
+                            file.renameTo(renameByAddingNumber(
                                     folder,
-                                    numberOfZerosToFilesWithCurrentEx = Util.changeNumberOfZeros(
+                                    numberOfZerosToFilesWithCurrentEx = changeNumberOfZeros(
                                             numberOfZerosToFilesWithCurrentEx,
                                             countFilesWithCurrentExtension),
                                     ++countFilesWithCurrentExtension,
@@ -320,9 +322,9 @@ public class Main {
             } else {
                 for (File file : listFiles) {
                     if (file.isDirectory()) {
-                        file.renameTo(Util.renameByAddingNumber(
+                        file.renameTo(renameByAddingNumber(
                                 folder,
-                                numberOfZerosToFoldersTemp = Util.changeNumberOfZeros(
+                                numberOfZerosToFoldersTemp = changeNumberOfZeros(
                                         numberOfZerosToFoldersTemp,
                                         countDirectories),
                                 ++countDirectories,
@@ -392,12 +394,12 @@ public class Main {
                 for (int i = 0; !separatorIsFound; i++) {   //search for separator in the file name, if not, then stop search
                     if (Character.isDigit(fileNameCharArray[i])) {
                         numberIsFound = true;
-                    } else if (numberIsFound && (Util.checkFile(file, fileName, i) ||       //checking for the presence of a number to delete
-                                                 Util.checkFolder(file, fileName, i))) {    //and for the presence of a separator
-                        file.renameTo(Util.renameByDeletingNumber(
+                    } else if (numberIsFound && (checkFile(file, fileName, i) ||       //checking for the presence of a number to delete
+                                                 checkFolder(file, fileName, i))) {    //and for the presence of a separator
+                        file.renameTo(renameByDeletingNumber(
                                 folder,
                                 fileName,
-                                (i - 1) + Util.getLengthOfSeparator(fileName, i)));  //(i - 1) is the pointer offset
+                                (i - 1) + getLengthOfSeparator(fileName, i)));  //(i - 1) is the pointer offset
                         separatorIsFound = true;
                     } else {
                         break;
@@ -427,7 +429,7 @@ public class Main {
             countDirectories = 0;
 
         //map with key-value: extension-number of occurrences
-        Map<String, Integer> extensionsInDir = Util.putAllExtensions(listFiles);
+        Map<String, Integer> extensionsInDir = putAllExtensions(listFiles);
 
         //pass through the map, for each entered extension
         for (Map.Entry<String, Integer> ex : extensionsInDir.entrySet()) {
@@ -438,18 +440,18 @@ public class Main {
                     fileToString = file.toString();
                     currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
                     if (currentExtension.equals(ex.getKey())) {
-                        file.renameTo(Util.renameToNumbersFiles(
+                        file.renameTo(renameToNumbersFiles(
                                 folder,
-                                numberOfZerosToFilesWithCurrentEx = Util.changeNumberOfZeros(
+                                numberOfZerosToFilesWithCurrentEx = changeNumberOfZeros(
                                         numberOfZerosToFilesWithCurrentEx,
                                         countFilesWithCurrentExtension),
                                 ++countFilesWithCurrentExtension,
                                 currentExtension));
                     }
                 } else {
-                    file.renameTo(Util.renameToNumbersFolders(
+                    file.renameTo(renameToNumbersFolders(
                             folder,
-                            numberOfZerosToFoldersTemp = Util.changeNumberOfZeros(
+                            numberOfZerosToFoldersTemp = changeNumberOfZeros(
                                     numberOfZerosToFoldersTemp,
                                     countDirectories),
                             ++countDirectories));

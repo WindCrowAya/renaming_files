@@ -13,6 +13,13 @@ import java.util.*;
 class Util {
 
     /**
+     * List of available separators, without "."
+     * <p> Supported patterns:
+     * "_" , " - " , " " , "-" , ". "
+     */
+    private static final List<String> separators = new ArrayList<>(Arrays.asList("_", " - ", " ", "-", ". "));
+
+    /**
      * Removes duplicate items in a string array.
      *
      * @param  s Array of strings
@@ -223,8 +230,6 @@ class Util {
 
     /**
      * Checks for a separator in a file or folder name.
-     * <p> Supported patterns:
-     * "_" , " - " , " " , "-" , ". "
      *
      * @param   fileName  File of folder name for checking
      * @param   counter   Pointer, where the checking starts
@@ -232,16 +237,18 @@ class Util {
      * @return  {@code true}, if one of the types of separators is found
      */
     private static boolean checkForSeparators(String fileName, int counter) {
-        return fileName.regionMatches(counter, "_",  0, 1) ||
-               fileName.regionMatches(counter, " - ",0, 3) ||
-               fileName.regionMatches(counter, " ",  0, 1) ||
-               fileName.regionMatches(counter, "-",  0, 1) ||
-               fileName.regionMatches(counter, ". ", 0, 2);
+        boolean hasSeparator = false;
+        for (String separator: separators) {
+            if (hasSeparator = fileName.regionMatches(counter, separator, 0, separator.length())) { // assigning, not equals!!!
+                break;
+            }
+        }
+        return hasSeparator;
     }
 
     /**
      * Checks for a separator in a file name.
-     * <p> In addition to the patterns from {@link #checkForSeparators (String, int)}, a pattern ".".
+     * <p> In addition to the patterns from {@link #separators}, a pattern ".".
      *
      * @param   fileName  File name for checking
      * @param   counter   Pointer, where the checking starts
@@ -255,7 +262,7 @@ class Util {
 
     /**
      * Checks for a separator in a folder name.
-     * <p> In addition to the patterns from {@link #checkForSeparators (String, int)}, a pattern ".".
+     * <p> In addition to the patterns from {@link #separators}, a pattern ".".
      *
      * @param   folderName  Folder name for checking
      * @param   counter     Pointer, where the checking starts
@@ -276,13 +283,6 @@ class Util {
      * @return  The length of separator
      */
     static int getLengthOfSeparator(String fileName, int counter) {
-        List<String> separators = new ArrayList<>();
-
-        separators.add("_");
-        separators.add(" - ");
-        separators.add(" ");
-        separators.add("-");
-        separators.add(". ");
         separators.add(".");
 
         int length;

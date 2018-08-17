@@ -1,7 +1,6 @@
 package ru.wca.rf;
 
 import org.junit.Test;
-import ru.wca.rf.Util;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -32,18 +31,18 @@ public class UtilTest {
 
     @Test
     public void countOfPointMoreThanOne() {
-        assertEquals(true,  Util.countOfPointMoreThanOne("01. Reimu.jpg"));
-        assertEquals(false, Util.countOfPointMoreThanOne("01 Reimu.jpg"));
-        assertEquals(true,  Util.countOfPointMoreThanOne("..jpg"));
+        assertTrue(Util.countOfPointMoreThanOne("01. Reimu.jpg"));
+        assertFalse(Util.countOfPointMoreThanOne("01 Reimu.jpg"));
+        assertTrue(Util.countOfPointMoreThanOne("..jpg"));
     }
 
     @Test
     public void checkForSeparators() {
-        assertEquals(true, Util.checkForSeparatorsInFile("01 - Reimu.png", 2));
-        assertEquals(true, Util.checkForSeparatorsInFile("01 Reimu.png",   2));
-        assertEquals(true, Util.checkForSeparatorsInFile("01-Reimu.png",   2));
-        assertEquals(true, Util.checkForSeparatorsInFile("01. Reimu.png",  2));
-        assertEquals(true, Util.checkForSeparatorsInFile("01.Reimu.png",   2));
+        assertTrue(Util.checkForSeparatorsInFile("01 - Reimu.png", 2));
+        assertTrue(Util.checkForSeparatorsInFile("01 Reimu.png",   2));
+        assertTrue(Util.checkForSeparatorsInFile("01-Reimu.png",   2));
+        assertTrue(Util.checkForSeparatorsInFile("01. Reimu.png",  2));
+        assertTrue(Util.checkForSeparatorsInFile("01.Reimu.png",   2));
     }
 
     @Test

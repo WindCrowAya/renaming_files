@@ -13,12 +13,13 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>RELEASE</version>
+            <version>4.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
     <properties>
-        <java-version>1.8.121</java-version>
+        <java-version>1.8.162</java-version>
     </properties>
 
     <build>
