@@ -1,1 +1,1 @@
-ru.wca.rf.Main-Class: ru.wca.rf.Main
+ru.wca.rf.App-Class: ru.wca.rf.App

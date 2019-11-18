@@ -1,11 +1,11 @@
 package ru.wca.rf;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.nio.file.Paths;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class UtilTest {
 
@@ -32,8 +32,8 @@ public class UtilTest {
     @Test
     public void countOfPointMoreThanOne() {
         assertTrue(Util.countOfPointMoreThanOne("01. Reimu.jpg"));
-        assertFalse(Util.countOfPointMoreThanOne("01 Reimu.jpg"));
         assertTrue(Util.countOfPointMoreThanOne("..jpg"));
+        assertFalse(Util.countOfPointMoreThanOne("01 Reimu.jpg"));
     }
 
     @Test

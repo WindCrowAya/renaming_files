@@ -1,11 +1,15 @@
 package ru.wca.rf;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
+import static ru.wca.rf.Constants.*;
 import static ru.wca.rf.Util.*;
 
 /**
@@ -24,11 +28,12 @@ import static ru.wca.rf.Util.*;
  */
 
 public class Main {
+    private static final Logger log = LoggerFactory.getLogger(Main.class);
 
     /**
      * The main method for renaming files. Here is the main work of the program.
      */
-    private static void renameFiles() throws IOException {
+    static void renameFiles() throws IOException {
         //set the property to read Cyrillic in the console, if it's present in the directory (for Russian language)
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in,
                 System.getProperty("console.encoding", "cp866")));
@@ -77,7 +82,7 @@ public class Main {
 
             pathIsEmpty = isEmpty(path);
             if (pathIsEmpty) {
-                System.out.print("Blank query. Re-enter, starting with the path: ");
+                System.out.print(BLANK_QUERY);
                 continue;
             }
 
@@ -86,12 +91,12 @@ public class Main {
 
             listFilesIsEmpty = (listFiles == null) || listFiles.length == 0;
             if (listFilesIsEmpty) {
-                System.out.print("There aren't files in the folder or the path entered doesn't exist. Re-enter, starting with the path: ");
+                System.out.print(EMPTY_FOLDER_OR_WRONG_PATH);
                 continue;
             }
 
 
-            System.out.print("Enter the command: ");
+            System.out.print(ENTER_COMMAND);
             command = reader.readLine().trim();
 
             if ("2".equals(command) ||
@@ -105,19 +110,19 @@ public class Main {
             } else if ("5".equals(command)) {
                 delPlusIsEnabled = true;
             } else {
-                System.out.print("Incorrect command. Re-enter, starting with the path: ");
+                System.out.print(WRONG_COMMAND);
                 continue;
             }
 
 
             //if the entered command does not process all files, then we enter extensions of the necessary files
             if (!allIsEnabled && !defIsEnabled && !delPlusIsEnabled) {
-                System.out.print("Enter extensions: ");
+                System.out.print(ENTER_EXTENSIONS);
                 stringOfExtensions = reader.readLine().trim();
 
                 stringOfExtensionsIsEmpty = isEmpty(stringOfExtensions);
                 if (stringOfExtensionsIsEmpty) {
-                    System.out.print("Blank query. Re-enter, starting with the path: ");
+                    System.out.print(BLANK_QUERY);
                     continue;
                 }
 
@@ -128,7 +133,7 @@ public class Main {
                 extensions = removeDuplicates(extensions);
 
                 if (extensions.length < 1) {
-                    System.out.print("No extensions entered. Re-enter, starting with the path: ");
+                    System.out.print(NO_EXTENSIONS_ENTERED);
                 }
             } else {
                 stringOfExtensionsIsEmpty = false;
@@ -165,7 +170,7 @@ public class Main {
             case "4":
                 for (String ex : extensions) {
                     listFiles = folder.listFiles();
-                    if (!"folders".equals(ex)) {
+                    if (!FOLDERS.equals(ex)) {
                         executeCommandDel(false, true, listFiles, ex, folder);
                     } else {
                         executeCommandDel(true, false, listFiles, ex, folder);
@@ -182,7 +187,7 @@ public class Main {
                 break;
             }
 
-            System.out.println("Rename completed.");
+            System.out.println(RENAME_COMPLETED);
         }
 
     /**
@@ -460,14 +465,4 @@ public class Main {
         }
     }
 
-    /**
-     * The method of executing the program.
-     */
-    public static void main(String[] args) {
-        try {
-            renameFiles();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

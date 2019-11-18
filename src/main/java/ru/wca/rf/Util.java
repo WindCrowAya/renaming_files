@@ -269,7 +269,7 @@ class Util {
      *
      * @return  {@code true}, if one of the types of separators is found (including from {@link #checkForSeparators(String, int)})
      */
-    static boolean checkForSeparatorsInFolder(String folderName, int counter) {
+    private static boolean checkForSeparatorsInFolder(String folderName, int counter) {
         return checkForSeparators(folderName, counter) ||
                folderName.regionMatches(counter, ".", 0, 1);
     }
