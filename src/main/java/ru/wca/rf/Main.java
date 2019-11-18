@@ -44,39 +44,19 @@ public class Main {
                 defIsEnabled = false,
                 allIsEnabled  = false,
                 delPlusIsEnabled = false;
-
         File folder = null;
-
         File[] listFiles = new File[0];
-
         String path,
                command = "",
                stringOfExtensions;
-
         String[] extensions = new String[0];
-
         int numberOfFiles,
             numberOfFolders = 0,
             numberOfZerosToFolders,
             numberOfZerosToFiles;
 
-        System.out.print(
-                "\n" +
-                "+------------------------------------+\n" +
-                "| Renaming files in specified folder |\n" +
-                "+------------------------------------+\n\n" +
-                "How to work with this program:\n" +
-                "1. Enter the path to the folder.\n" +
-                "2. Use the special command by entering id:\n" +
-                "-> 1 :        (all) rename all files and folders individually;\n" +
-                "-> 2 :     (rename) rename for each entered extension;\n" +
-                "-> 3 :    (add num) add the serial number to the file names;\n" +
-                "-> 4 : (delete num) remove numbering of files for each entered extensions;\n" +
-                "-> 5 : (delete all) remove numbering for each file;\n" +
-                "-> 6 : (rename all) default, renaming all files by extension;\n" +
-                "                   (instead of entering this command, just press Enter, leaving the input field empty).\n" +
-                "3. Write extensions separated by commas, to rename the folders enter \"folders\".\n\n" +
-                "Enter the path: ");
+        showStartupMessage();
+
         do {
             path = reader.readLine().trim();
 
@@ -95,25 +75,23 @@ public class Main {
                 continue;
             }
 
-
             System.out.print(ENTER_COMMAND);
             command = reader.readLine().trim();
 
-            if ("2".equals(command) ||
-                "3".equals(command) ||
-                "4".equals(command)) {
+            if (RENAME.equals(command) ||
+                ADD_NUM.equals(command) ||
+                DELETE_NUM.equals(command)) {
                 //do nothing, because the entered command processes all files in the folder
-            } else if (isEmpty(command) || "6".equals(command)) {
+            } else if (isEmpty(command) || RENAME_ALL.equals(command)) {
                 defIsEnabled = true;
-            } else if ("1".equals(command)) {
+            } else if (ALL.equals(command)) {
                 allIsEnabled = true;
-            } else if ("5".equals(command)) {
+            } else if (DELETE_ALL.equals(command)) {
                 delPlusIsEnabled = true;
             } else {
                 System.out.print(WRONG_COMMAND);
                 continue;
             }
-
 
             //if the entered command does not process all files, then we enter extensions of the necessary files
             if (!allIsEnabled && !defIsEnabled && !delPlusIsEnabled) {
@@ -155,19 +133,19 @@ public class Main {
 
         //processing the selected command
         switch (command) {
-            case "1":
+            case ALL:
                 executeCommandAll(listFiles, folder, numberOfZerosToFiles, numberOfZerosToFolders);
                 break;
 
-            case "2":
+            case RENAME:
                 executeCommandRename(listFiles, folder, numberOfZerosToFolders, extensions);
                 break;
 
-            case "3":
+            case ADD_NUM:
                 executeCommandAdd(listFiles, folder, numberOfZerosToFolders, extensions);
                 break;
 
-            case "4":
+            case DELETE_NUM:
                 for (String ex : extensions) {
                     listFiles = folder.listFiles();
                     if (!FOLDERS.equals(ex)) {
@@ -178,7 +156,7 @@ public class Main {
                 }
                 break;
 
-            case "5":
+            case DELETE_ALL:
                 executeCommandDel(true, true, listFiles, null, folder);
                 break;
 
@@ -210,7 +188,7 @@ public class Main {
         for (File file : listFiles) {
             if (!file.isDirectory()) {
                 fileToString = file.toString();
-                currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
+                currentExtension = fileToString.substring(fileToString.lastIndexOf(DOT) + 1);
                 file.renameTo(renameToNumbersFiles(
                         folder,
                         numberOfZerosToFiles = changeNumberOfZeros(
@@ -252,12 +230,12 @@ public class Main {
         //pass through the map, for each entered extension
         for (Map.Entry<String, Integer> ex : extensionsInDir.entrySet()) {
             numberOfZerosToFilesWithCurrentEx = String.valueOf(ex.getValue()).length() - 1;
-            if (!ex.getKey().equals("folders")) {
+            if (!ex.getKey().equals(FOLDERS)) {
                 countFilesWithCurrentExtension = 0;
                 for (File file : listFiles) {
                     if (!file.isDirectory()) {
                         fileToString = file.toString();
-                        currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
+                        currentExtension = fileToString.substring(fileToString.lastIndexOf(DOT) + 1);
                         if (currentExtension.equals(ex.getKey())) {
                             file.renameTo(renameToNumbersFiles(
                                     folder,
@@ -307,12 +285,12 @@ public class Main {
         //pass through the map, for each entered extension
         for (Map.Entry<String, Integer> ex : extensionsInDir.entrySet()) {
             numberOfZerosToFilesWithCurrentEx = String.valueOf(ex.getValue()).length() - 1;
-            if (!ex.getKey().equals("folders")) {
+            if (!ex.getKey().equals(FOLDERS)) {
                 countFilesWithCurrentExtension = 0;
                 for (File file : listFiles) {
                     if (!file.isDirectory()) {
                         fileToString = file.toString();
-                        currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
+                        currentExtension = fileToString.substring(fileToString.lastIndexOf(DOT) + 1);
                         if (currentExtension.equals(ex.getKey())) {
                             file.renameTo(renameByAddingNumber(
                                     folder,
@@ -371,7 +349,7 @@ public class Main {
             fileNameCharArray = fileName.toCharArray();
             fileToString = file.toString();
             if (!file.isDirectory()) {
-                fileNameWithoutEx = fileName.substring(0, fileName.lastIndexOf(".")).trim();    //file name without extension
+                fileNameWithoutEx = fileName.substring(0, fileName.lastIndexOf(DOT)).trim();    //file name without extension
                 fileNameWithoutExCharArray = fileNameWithoutEx.toCharArray();
                 for (int i = 0; i < fileNameWithoutExCharArray.length; i++) {
                     if (Character.isDigit(fileNameWithoutExCharArray[i])) {     //checks if there are numbers at the beginning of the file name
@@ -393,7 +371,7 @@ public class Main {
                     }
                 }
             }
-            if ((isItFiles && fileToString.substring(fileToString.lastIndexOf(".") + 1).equals(extension)) ||   //files only
+            if ((isItFiles && fileToString.substring(fileToString.lastIndexOf(DOT) + 1).equals(extension)) ||   //files only
                 (isItFiles && isItFolders) ||                                                                       //folders & files
                 (isItFolders && file.isDirectory())) {                                                              //folders only
                 for (int i = 0; !separatorIsFound; i++) {   //search for separator in the file name, if not, then stop search
@@ -404,7 +382,7 @@ public class Main {
                         file.renameTo(renameByDeletingNumber(
                                 folder,
                                 fileName,
-                                (i - 1) + getLengthOfSeparator(fileName, i)));  //(i - 1) is the pointer offset
+                                (i - 1) + lengthOfSeparator(fileName, i)));  //(i - 1) is the pointer offset
                         separatorIsFound = true;
                     } else {
                         break;
@@ -443,7 +421,7 @@ public class Main {
             for (File file : listFiles) {
                 if (!file.isDirectory()) {
                     fileToString = file.toString();
-                    currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
+                    currentExtension = fileToString.substring(fileToString.lastIndexOf(DOT) + 1);
                     if (currentExtension.equals(ex.getKey())) {
                         file.renameTo(renameToNumbersFiles(
                                 folder,
@@ -465,4 +443,22 @@ public class Main {
         }
     }
 
+    private static void showStartupMessage() {
+        System.out.print(
+                "\n" +
+                "+------------------------------------+\n" +
+                "| Renaming files in specified folder |\n" +
+                "+------------------------------------+\n\n" +
+                "1. Enter the path to the folder.\n" +
+                "2. Use the special command by entering id:\n" +
+                "-> 1 :        (all) rename all files and folders individually;\n" +
+                "-> 2 :     (rename) rename for each entered extension;\n" +
+                "-> 3 :    (add num) add the serial number to the file names;\n" +
+                "-> 4 : (delete num) remove numbering of files for each entered extensions;\n" +
+                "-> 5 : (delete all) remove numbering for each file;\n" +
+                "-> 6 : (rename all) default, renaming all files by extension;\n" +
+                "                   (instead of entering this command, just press Enter, leaving the input field empty).\n" +
+                "3. Write extensions separated by commas, to rename folders enter \"folders\".\n\n" +
+                "Enter the path: ");
+    }
 }

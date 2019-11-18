@@ -4,6 +4,8 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.util.*;
 
+import static ru.wca.rf.Constants.DOT;
+
 /**
  * Class contains util methods that perform the main work of the program.
  *
@@ -94,7 +96,7 @@ class Util {
      */
     static File renameToNumbersFiles(File folder, int numberOfZeros, int countFiles, String extension) {
         return Paths.get(
-                setDirectoryZerosAndCount(folder, numberOfZeros, countFiles) + "." + extension
+                setDirectoryZerosAndCount(folder, numberOfZeros, countFiles) + DOT + extension
                         ).toFile();
     }
 
@@ -166,7 +168,7 @@ class Util {
         for (File file : listFiles) {
             if (!file.isDirectory()) {
                 fileToString = file.toString();
-                currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
+                currentExtension = fileToString.substring(fileToString.lastIndexOf(DOT) + 1);
                 if (extensionsInDir.containsKey(currentExtension)) {
                     extensionsInDir.put(currentExtension, extensionsInDir.get(currentExtension) + 1);
                 }
@@ -196,7 +198,7 @@ class Util {
         for (File file : listFiles) {
             if (!file.isDirectory()) {
                 fileToString = file.toString();
-                currentExtension = fileToString.substring(fileToString.lastIndexOf(".") + 1);
+                currentExtension = fileToString.substring(fileToString.lastIndexOf(DOT) + 1);
                 if (extensionsInDir.containsKey(currentExtension)) {
                     extensionsInDir.put(currentExtension, extensionsInDir.get(currentExtension) + 1);
                 } else {
@@ -218,7 +220,7 @@ class Util {
     static boolean countOfPointMoreThanOne(String fileName) {
         int count = 0;
         for (char ch : fileName.toCharArray()) {
-            if (String.valueOf(ch).equals(".")) {
+            if (String.valueOf(ch).equals(DOT)) {
                 count++;
                 if (count > 1) {
                     return true;
@@ -257,7 +259,7 @@ class Util {
      */
     static boolean checkForSeparatorsInFile(String fileName, int counter) {
         return checkForSeparators(fileName, counter) ||
-               (countOfPointMoreThanOne(fileName) && fileName.regionMatches(counter, ".", 0, 1));
+               (countOfPointMoreThanOne(fileName) && fileName.regionMatches(counter, DOT, 0, 1));
     }
 
     /**
@@ -271,7 +273,7 @@ class Util {
      */
     private static boolean checkForSeparatorsInFolder(String folderName, int counter) {
         return checkForSeparators(folderName, counter) ||
-               folderName.regionMatches(counter, ".", 0, 1);
+               folderName.regionMatches(counter, DOT, 0, 1);
     }
 
     /**
@@ -282,8 +284,8 @@ class Util {
      *
      * @return  The length of separator
      */
-    static int getLengthOfSeparator(String fileName, int counter) {
-        separators.add(".");
+    static int lengthOfSeparator(String fileName, int counter) {
+        separators.add(DOT);
 
         int length;
         for (String separator : separators) {
