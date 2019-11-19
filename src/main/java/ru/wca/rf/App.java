@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-import static ru.wca.rf.Main.*;
+import static ru.wca.rf.RenamingService.*;
 
 public class App {
     private static final Logger log = LoggerFactory.getLogger(App.class);

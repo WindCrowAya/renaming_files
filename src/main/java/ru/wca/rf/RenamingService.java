@@ -27,8 +27,8 @@ import static ru.wca.rf.Util.*;
  * @author <a href="https://github.com/WindCrowAya">WindCrowAya</a>
  */
 
-public class Main {
-    private static final Logger log = LoggerFactory.getLogger(Main.class);
+public class RenamingService {
+    private static final Logger log = LoggerFactory.getLogger(RenamingService.class);
 
     /**
      * The main method for renaming files. Here is the main work of the program.
