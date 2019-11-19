@@ -34,17 +34,19 @@ class CmdTest {
     void executeCommandRenameAll() {
         //given
         createTestFiles();
-        File folderTest = new File("D:\\ProjectData\\Test_rf\\test");
-        File folderExpected = new File("D:\\ProjectData\\Test_rf\\expected");
+        File folderTest = folder("test");
+        File folderExpected = folder("expected");
         //when
         RenamingService.executeCommandRenameAll(folderTest.listFiles(), folderTest, 0);
         //then
-        createExpectedFiles();
+        createExpectedFilesForCmdRenameAll();
         filesForTest = folderTest.listFiles();
         filesForExpected = folderExpected.listFiles();
-        String[] filenamesTest = filenames(filesForTest);
-        String[] filenamesExpected = filenames(filesForExpected);
-        assertArrayEquals(filenamesTest, filenamesExpected);
+        assertArrayEquals(filenames(filesForTest), filenames(filesForExpected));
+    }
+
+    private File folder(String folderName) {
+        return new File("D:\\ProjectData\\Test_rf\\" + folderName);
     }
 
     private String[] filenames(File[] files) {
@@ -79,7 +81,7 @@ class CmdTest {
         createFiles(files);
     }
 
-    private void createExpectedFiles() {
+    private void createExpectedFilesForCmdRenameAll() {
         new File("D:\\ProjectData\\Test_rf\\expected\\1").mkdir();
         new File("D:\\ProjectData\\Test_rf\\expected\\2").mkdir();
         new File("D:\\ProjectData\\Test_rf\\expected\\3").mkdir();

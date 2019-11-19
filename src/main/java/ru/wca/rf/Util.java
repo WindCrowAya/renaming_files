@@ -5,6 +5,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 import static ru.wca.rf.Constants.DOT;
+import static ru.wca.rf.Constants.FOLDERS;
 
 /**
  * Class contains util methods that perform the main work of the program.
@@ -19,7 +20,7 @@ class Util {
      * <p> Supported patterns:
      * "_" , " - " , " " , "-" , ". "
      */
-    private static final List<String> separators = new ArrayList<>(Arrays.asList("_", " - ", " ", "-", ". "));
+    private static final List<String> separators = new ArrayList<>(List.of("_", " - ", " ", "-", ". "));
 
     /**
      * Removes duplicate items in a string array.
@@ -175,8 +176,8 @@ class Util {
                     extensionsInDir.put(currentExtension, extensionsInDir.get(currentExtension) + 1);
                 }
             } else {
-                if (extensionsInDir.containsKey("folders")) {
-                    extensionsInDir.put("folders", extensionsInDir.get("folders") + 1);
+                if (extensionsInDir.containsKey(FOLDERS)) {
+                    extensionsInDir.put(FOLDERS, extensionsInDir.get(FOLDERS) + 1);
                 }
             }
         }
@@ -304,7 +305,7 @@ class Util {
      * @return {@code true}, if it's a file with separator
      */
     static boolean checkFile(File file, String fileName, int counter) {
-        return !file.isDirectory() && Util.checkForSeparatorsInFile(fileName, counter);
+        return !file.isDirectory() && checkForSeparatorsInFile(fileName, counter);
     }
 
     /**
@@ -316,6 +317,6 @@ class Util {
      * @return {@code true}, if it's a folder with separator
      */
     static boolean checkFolder(File file, String fileName, int counter) {
-        return file.isDirectory() && Util.checkForSeparatorsInFolder(fileName, counter);
+        return file.isDirectory() && checkForSeparatorsInFolder(fileName, counter);
     }
 }
