@@ -69,7 +69,7 @@ public class Main {
             folder = new File(path);
             listFiles = folder.listFiles();
 
-            listFilesIsEmpty = (listFiles == null) || listFiles.length == 0;
+            listFilesIsEmpty = isEmptyArray(listFiles);
             if (listFilesIsEmpty) {
                 System.out.print(EMPTY_FOLDER_OR_WRONG_PATH);
                 continue;
@@ -116,8 +116,7 @@ public class Main {
             } else {
                 stringOfExtensionsIsEmpty = false;
             }
-
-            } while (pathIsEmpty || listFilesIsEmpty || stringOfExtensionsIsEmpty);
+        } while (pathIsEmpty || listFilesIsEmpty || stringOfExtensionsIsEmpty);
 
 
         //count the number of folders, files and zeros in front of them
@@ -136,15 +135,12 @@ public class Main {
             case ALL:
                 executeCommandAll(listFiles, folder, numberOfZerosToFiles, numberOfZerosToFolders);
                 break;
-
             case RENAME:
                 executeCommandRename(listFiles, folder, numberOfZerosToFolders, extensions);
                 break;
-
             case ADD_NUM:
                 executeCommandAdd(listFiles, folder, numberOfZerosToFolders, extensions);
                 break;
-
             case DELETE_NUM:
                 for (String ex : extensions) {
                     listFiles = folder.listFiles();
@@ -155,11 +151,9 @@ public class Main {
                     }
                 }
                 break;
-
             case DELETE_ALL:
                 executeCommandDel(true, true, listFiles, null, folder);
                 break;
-
             default:
                 executeCommandRenameAll(listFiles, folder, numberOfZerosToFolders);
                 break;
@@ -171,15 +165,14 @@ public class Main {
     /**
      * Command "all" renames all files and folders individually.
      *
-     * @param listFiles                The list of files in the specified folder
-     * @param folder                   Specified folder
-     * @param numberOfZerosToFiles     The number of zeros added to the beginning of file numbering
-     * @param numberOfZerosToFolders   The number of zeros added to the beginning of folder numbering
+     * @param listFiles              The list of files in the specified folder
+     * @param folder                 Specified folder
+     * @param numberOfZerosToFiles   The number of zeros added to the beginning of file numbering
+     * @param numberOfZerosToFolders The number of zeros added to the beginning of folder numbering
      */
-    static void executeCommandAll(File[] listFiles, File folder, int numberOfZerosToFiles, int numberOfZerosToFolders) {
+    public static void executeCommandAll(File[] listFiles, File folder, int numberOfZerosToFiles, int numberOfZerosToFolders) {
         String fileToString,
                currentExtension;
-
         int countFilesWithAnyExtension = 0,
             numberOfZerosToFoldersTemp = numberOfZerosToFolders,  //Codacy: the change in the input parameter is undesirable; temp-variable is introduced
             countDirectories = 0;
@@ -210,20 +203,18 @@ public class Main {
     /**
      * Command "rename" renames files for each entered extension.
      *
-     * @param listFiles                The list of files in the specified folder
-     * @param folder                   Specified folder
-     * @param numberOfZerosToFolders   The number of zeros added to the beginning of the folder numbering
-     * @param extensions               Array of entered extensions
+     * @param listFiles              The list of files in the specified folder
+     * @param folder                 Specified folder
+     * @param numberOfZerosToFolders The number of zeros added to the beginning of the folder numbering
+     * @param extensions             Array of entered extensions
      */
     static void executeCommandRename(File[] listFiles, File folder, int numberOfZerosToFolders, String[] extensions) {
         String fileToString,
                currentExtension;
-
         int countFilesWithCurrentExtension,
             numberOfZerosToFilesWithCurrentEx,
             numberOfZerosToFoldersTemp = numberOfZerosToFolders,  //Codacy: the change in the input parameter is undesirable; temp-variable is introduced
             countDirectories = 0;
-
         //map with key-value: extension-number of occurrences
         Map<String, Integer> extensionsInDir = putExtensions(extensions, listFiles);
 
@@ -265,20 +256,18 @@ public class Main {
     /**
      * Command "add num" removes numbering of files for each entered extension.
      *
-     * @param listFiles                The list of files in the specified folder
-     * @param folder                   Specified folder
-     * @param numberOfZerosToFolders   The number of zeros added to the beginning of the folder numbering
-     * @param extensions               Array of entered extensions
+     * @param listFiles              The list of files in the specified folder
+     * @param folder                 Specified folder
+     * @param numberOfZerosToFolders The number of zeros added to the beginning of the folder numbering
+     * @param extensions             Array of entered extensions
      */
     static void executeCommandAdd(File[] listFiles, File folder, int numberOfZerosToFolders, String[] extensions) {
         String fileToString,
                currentExtension;
-
         int countFilesWithCurrentExtension,
             numberOfZerosToFilesWithCurrentEx,
             numberOfZerosToFoldersTemp = numberOfZerosToFolders,  //Codacy: the change in the input parameter is undesirable; temp-variable is introduced
             countDirectories = 0;
-
         //map with key-value: extension-number of occurrences
         Map<String, Integer> extensionsInDir = putExtensions(extensions, listFiles);
 
@@ -326,20 +315,18 @@ public class Main {
      * <p> Command "delete all" removes numbering for each file in the folder.
      * <p> Flags {@code isItFolder} and {@code isItFiles} must be {@code true}.
      *
-     * @param isItFolders   The flag indicates whether folders will be processed
-     * @param isItFiles     The flag indicates whether files will be processed
-     * @param listFiles     The list of files in the specified folder in the iteration
-     * @param extension     The current extension in the iteration
-     * @param folder        Specified folder
+     * @param isItFolders The flag indicates whether folders will be processed
+     * @param isItFiles   The flag indicates whether files will be processed
+     * @param listFiles   The list of files in the specified folder in the iteration
+     * @param extension   The current extension in the iteration
+     * @param folder      Specified folder
      */
     static void executeCommandDel(boolean isItFolders, boolean isItFiles, File[] listFiles, String extension, File folder) {
         String fileName,
                fileNameWithoutEx,
                fileToString;
-
         char[] fileNameCharArray,
                fileNameWithoutExCharArray;
-
         boolean separatorIsFound = false,
                 numberIsFound = false;
 
@@ -398,19 +385,17 @@ public class Main {
      * Command "rename all" renames all files by extension.
      * <p> Default command.
      *
-     * @param listFiles                The list of files in the specified folder
-     * @param folder                   Specified folder
-     * @param numberOfZerosToFolders   The number of zeros added to the beginning of the folder numbering
+     * @param listFiles              The list of files in the specified folder
+     * @param folder                 Specified folder
+     * @param numberOfZerosToFolders The number of zeros added to the beginning of the folder numbering
      */
     static void executeCommandRenameAll(File[] listFiles, File folder, int numberOfZerosToFolders) {
         String fileToString,
                currentExtension;
-
         int countFilesWithCurrentExtension,
             numberOfZerosToFilesWithCurrentEx,
             numberOfZerosToFoldersTemp = numberOfZerosToFolders,  //Codacy: the change in the input parameter is undesirable; temp-variable is introduced
             countDirectories = 0;
-
         //map with key-value: extension-number of occurrences
         Map<String, Integer> extensionsInDir = putAllExtensions(listFiles);
 
@@ -449,16 +434,16 @@ public class Main {
                 "+------------------------------------+\n" +
                 "| Renaming files in specified folder |\n" +
                 "+------------------------------------+\n\n" +
-                "1. Enter the path to the folder.\n" +
+                "1. Enter the path to the folder\n" +
                 "2. Use the special command by entering id:\n" +
-                "-> 1 :        (all) rename all files and folders individually;\n" +
-                "-> 2 :     (rename) rename for each entered extension;\n" +
-                "-> 3 :    (add num) add the serial number to the file names;\n" +
-                "-> 4 : (delete num) remove numbering of files for each entered extensions;\n" +
-                "-> 5 : (delete all) remove numbering for each file;\n" +
-                "-> 6 : (rename all) default, renaming all files by extension;\n" +
-                "                   (instead of entering this command, just press Enter, leaving the input field empty).\n" +
-                "3. Write extensions separated by commas, to rename folders enter \"folders\".\n\n" +
+                "-> 1 :        (all) rename all files and folders individually\n" +
+                "-> 2 :     (rename) rename for each entered extension\n" +
+                "-> 3 :    (add num) add the serial number to the file names\n" +
+                "-> 4 : (delete num) remove numbering of files for each entered extensions\n" +
+                "-> 5 : (delete all) remove numbering for each file\n" +
+                "-> 6 : (rename all) default, renaming all files by extension\n" +
+                "                   (instead of entering this command, just press Enter, leaving the input field empty)\n" +
+                "3. Write extensions separated by commas, to rename folders enter \"folders\"\n\n" +
                 "Enter the path: ");
     }
 }
