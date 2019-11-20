@@ -60,6 +60,38 @@ class CmdTest {
         assertArrayEquals(filenames(filesForTest), filenames(filesForExpected));
     }
 
+    @Test
+    void executeCommandRename() {
+        //given
+        createTestFiles();
+        File folderTest = folder("test");
+        File folderExpected = folder("expected");
+        //when
+        RenamingService.executeCommandRename(folderTest.listFiles(), folderTest, 0,
+                new String[] {"mp3","folders"});
+        //then
+        createExpectedFilesForCmdRename();
+        filesForTest = folderTest.listFiles();
+        filesForExpected = folderExpected.listFiles();
+        assertArrayEquals(filenames(filesForTest), filenames(filesForExpected));
+    }
+
+    @Test
+    void executeCommandAdd() {
+        //given
+        createTestFiles();
+        File folderTest = folder("test");
+        File folderExpected = folder("expected");
+        //when
+        RenamingService.executeCommandAdd(folderTest.listFiles(), folderTest, 0,
+                new String[] {"folders","jpg"});
+        //then
+        createExpectedFilesForCmdAdd();
+        filesForTest = folderTest.listFiles();
+        filesForExpected = folderExpected.listFiles();
+        assertArrayEquals(filenames(filesForTest), filenames(filesForExpected));
+    }
+
     private File folder(String folderName) {
         return new File("D:\\ProjectData\\Test_rf\\" + folderName);
     }
@@ -138,6 +170,52 @@ class CmdTest {
                 new File("D:\\ProjectData\\Test_rf\\expected\\10.jpg"),
                 new File("D:\\ProjectData\\Test_rf\\expected\\11.jpg"),
                 new File("D:\\ProjectData\\Test_rf\\expected\\12.jpg")
+        );
+        createFiles(files);
+    }
+
+    private void createExpectedFilesForCmdRename() {
+        new File("D:\\ProjectData\\Test_rf\\expected\\1").mkdir();
+        new File("D:\\ProjectData\\Test_rf\\expected\\2").mkdir();
+        new File("D:\\ProjectData\\Test_rf\\expected\\3").mkdir();
+        new File("D:\\ProjectData\\Test_rf\\expected\\4").mkdir();
+        new File("D:\\ProjectData\\Test_rf\\expected\\5").mkdir();
+        List<File> files = List.of(
+                new File("D:\\ProjectData\\Test_rf\\expected\\IMG000.jpg"),
+                new File("D:\\ProjectData\\Test_rf\\expected\\IMG001.jpg"),
+                new File("D:\\ProjectData\\Test_rf\\expected\\1_IMG002.jpg"),
+                new File("D:\\ProjectData\\Test_rf\\expected\\2 - IMG003.jpg"),
+                new File("D:\\ProjectData\\Test_rf\\expected\\3 IMG004.jpg"),
+                new File("D:\\ProjectData\\Test_rf\\expected\\4-IMG005.jpg"),
+                new File("D:\\ProjectData\\Test_rf\\expected\\5. IMG006.jpg"),
+                new File("D:\\ProjectData\\Test_rf\\expected\\6.IMG007.jpg"),
+                new File("D:\\ProjectData\\Test_rf\\expected\\IMG008.jpg"),
+                new File("D:\\ProjectData\\Test_rf\\expected\\IMG009.jpg"),
+                new File("D:\\ProjectData\\Test_rf\\expected\\1.mp3"),
+                new File("D:\\ProjectData\\Test_rf\\expected\\2.mp3")
+        );
+        createFiles(files);
+    }
+
+    private void createExpectedFilesForCmdAdd() {
+        new File("D:\\ProjectData\\Test_rf\\expected\\1 123").mkdir();
+        new File("D:\\ProjectData\\Test_rf\\expected\\2 2 folder").mkdir();
+        new File("D:\\ProjectData\\Test_rf\\expected\\3 3-folder1").mkdir();
+        new File("D:\\ProjectData\\Test_rf\\expected\\4 456 folder2").mkdir();
+        new File("D:\\ProjectData\\Test_rf\\expected\\5 folder1").mkdir();
+        List<File> files = List.of(
+                new File("D:\\ProjectData\\Test_rf\\expected\\01 1_IMG002.jpg"),
+                new File("D:\\ProjectData\\Test_rf\\expected\\02 2 - IMG003.jpg"),
+                new File("D:\\ProjectData\\Test_rf\\expected\\03 3 IMG004.jpg"),
+                new File("D:\\ProjectData\\Test_rf\\expected\\04 4-IMG005.jpg"),
+                new File("D:\\ProjectData\\Test_rf\\expected\\05 5. IMG006.jpg"),
+                new File("D:\\ProjectData\\Test_rf\\expected\\06 6.IMG007.jpg"),
+                new File("D:\\ProjectData\\Test_rf\\expected\\07 IMG000.jpg"),
+                new File("D:\\ProjectData\\Test_rf\\expected\\08 IMG001.jpg"),
+                new File("D:\\ProjectData\\Test_rf\\expected\\09 IMG008.jpg"),
+                new File("D:\\ProjectData\\Test_rf\\expected\\10 IMG009.jpg"),
+                new File("D:\\ProjectData\\Test_rf\\expected\\004 - music.mp3"),
+                new File("D:\\ProjectData\\Test_rf\\expected\\005 - new music.mp3")
         );
         createFiles(files);
     }
