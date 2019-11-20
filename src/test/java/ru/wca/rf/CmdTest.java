@@ -4,12 +4,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 
 import static java.util.Objects.nonNull;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static ru.wca.rf.Constants.FOLDERS;
+import static ru.wca.rf.TestDataFactory.*;
 
 class CmdTest {
 
@@ -92,11 +92,42 @@ class CmdTest {
         assertArrayEquals(filenames(filesForTest), filenames(filesForExpected));
     }
 
+    @Test
+    void executeCommandDeleteNum() {
+        //given
+        createTestFiles();
+        File folderTest = folder("test");
+        File folderExpected = folder("expected");
+        String[] extensions = new String[] {"jpg","folders"};
+        //when
+        executeCommandDeleteNum(folderTest, extensions);
+        //then
+        createExpectedFilesForCmdDeleteNum();
+        filesForTest = folderTest.listFiles();
+        filesForExpected = folderExpected.listFiles();
+        assertArrayEquals(filenames(filesForTest), filenames(filesForExpected));
+    }
+
+    @Test
+    void executeCommandDeleteAll() {
+        //given
+        createTestFiles();
+        File folderTest = folder("test");
+        File folderExpected = folder("expected");
+        //when
+        RenamingService.executeCommandDel(true, true, folderTest.listFiles(), null, folderTest);
+        //then
+        createExpectedFilesForCmdDeleteAll();
+        filesForTest = folderTest.listFiles();
+        filesForExpected = folderExpected.listFiles();
+        assertArrayEquals(filenames(filesForTest), filenames(filesForExpected));
+    }
+
     private File folder(String folderName) {
         return new File("D:\\ProjectData\\Test_rf\\" + folderName);
     }
 
-    private String[] filenames(File[] files) {
+    private String[] filenames(File[] files) {  // TODO: 20.11.2019 Попробовать реализовать через стримы
         String[] filenames = new String[files.length];
         for (int i = 0; i < files.length; i++) {
             filenames[i] = files[i].getName();
@@ -105,126 +136,14 @@ class CmdTest {
         return filenames;
     }
 
-    private void createTestFiles() {
-        new File("D:\\ProjectData\\Test_rf\\test\\folder1").mkdir();
-        new File("D:\\ProjectData\\Test_rf\\test\\2 folder").mkdir();
-        new File("D:\\ProjectData\\Test_rf\\test\\3-folder1").mkdir();
-        new File("D:\\ProjectData\\Test_rf\\test\\123").mkdir();
-        new File("D:\\ProjectData\\Test_rf\\test\\456 folder2").mkdir();
-        List<File> files = List.of(
-                new File("D:\\ProjectData\\Test_rf\\test\\IMG000.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\test\\IMG001.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\test\\1_IMG002.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\test\\2 - IMG003.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\test\\3 IMG004.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\test\\4-IMG005.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\test\\5. IMG006.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\test\\6.IMG007.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\test\\IMG008.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\test\\IMG009.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\test\\004 - music.mp3"),
-                new File("D:\\ProjectData\\Test_rf\\test\\005 - new music.mp3")
-        );
-        createFiles(files);
-    }
-
-    private void createExpectedFilesForCmdRenameAll() {
-        new File("D:\\ProjectData\\Test_rf\\expected\\1").mkdir();
-        new File("D:\\ProjectData\\Test_rf\\expected\\2").mkdir();
-        new File("D:\\ProjectData\\Test_rf\\expected\\3").mkdir();
-        new File("D:\\ProjectData\\Test_rf\\expected\\4").mkdir();
-        new File("D:\\ProjectData\\Test_rf\\expected\\5").mkdir();
-        List<File> files = List.of(
-                new File("D:\\ProjectData\\Test_rf\\expected\\01.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\02.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\03.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\04.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\05.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\06.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\07.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\08.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\09.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\10.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\1.mp3"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\2.mp3")
-        );
-        createFiles(files);
-    }
-
-    private void createExpectedFilesForCmdAll() {
-        new File("D:\\ProjectData\\Test_rf\\expected\\1").mkdir();
-        new File("D:\\ProjectData\\Test_rf\\expected\\2").mkdir();
-        new File("D:\\ProjectData\\Test_rf\\expected\\3").mkdir();
-        new File("D:\\ProjectData\\Test_rf\\expected\\4").mkdir();
-        new File("D:\\ProjectData\\Test_rf\\expected\\5").mkdir();
-        List<File> files = List.of(
-                new File("D:\\ProjectData\\Test_rf\\expected\\01.mp3"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\02.mp3"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\03.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\04.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\05.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\06.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\07.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\08.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\09.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\10.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\11.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\12.jpg")
-        );
-        createFiles(files);
-    }
-
-    private void createExpectedFilesForCmdRename() {
-        new File("D:\\ProjectData\\Test_rf\\expected\\1").mkdir();
-        new File("D:\\ProjectData\\Test_rf\\expected\\2").mkdir();
-        new File("D:\\ProjectData\\Test_rf\\expected\\3").mkdir();
-        new File("D:\\ProjectData\\Test_rf\\expected\\4").mkdir();
-        new File("D:\\ProjectData\\Test_rf\\expected\\5").mkdir();
-        List<File> files = List.of(
-                new File("D:\\ProjectData\\Test_rf\\expected\\IMG000.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\IMG001.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\1_IMG002.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\2 - IMG003.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\3 IMG004.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\4-IMG005.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\5. IMG006.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\6.IMG007.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\IMG008.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\IMG009.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\1.mp3"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\2.mp3")
-        );
-        createFiles(files);
-    }
-
-    private void createExpectedFilesForCmdAdd() {
-        new File("D:\\ProjectData\\Test_rf\\expected\\1 123").mkdir();
-        new File("D:\\ProjectData\\Test_rf\\expected\\2 2 folder").mkdir();
-        new File("D:\\ProjectData\\Test_rf\\expected\\3 3-folder1").mkdir();
-        new File("D:\\ProjectData\\Test_rf\\expected\\4 456 folder2").mkdir();
-        new File("D:\\ProjectData\\Test_rf\\expected\\5 folder1").mkdir();
-        List<File> files = List.of(
-                new File("D:\\ProjectData\\Test_rf\\expected\\01 1_IMG002.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\02 2 - IMG003.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\03 3 IMG004.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\04 4-IMG005.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\05 5. IMG006.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\06 6.IMG007.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\07 IMG000.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\08 IMG001.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\09 IMG008.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\10 IMG009.jpg"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\004 - music.mp3"),
-                new File("D:\\ProjectData\\Test_rf\\expected\\005 - new music.mp3")
-        );
-        createFiles(files);
-    }
-
-    private void createFiles(List<File> files) {
-        try {
-            for (File file : files) {
-                file.createNewFile();
+    private void executeCommandDeleteNum(File folder, String[] extensions) {
+        for (String ex : extensions) {
+            File[] files = folder.listFiles();
+            if (!FOLDERS.equals(ex)) {
+                RenamingService.executeCommandDel(false, true, files, ex, folder);
+            } else {
+                RenamingService.executeCommandDel(true, false, files, ex, folder);
             }
-        } catch (IOException ignored) {}
+        }
     }
 }

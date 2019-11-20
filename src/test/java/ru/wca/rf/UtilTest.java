@@ -4,19 +4,19 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.nio.file.Paths;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static ru.wca.rf.TestDataFactory.filesWithNumbering;
 
 class UtilTest {
 
     @Test
     void renameByDeletingNumber() {
-        File file1 = files().get(0);
-        File file2 = files().get(1);
-        File file3 = files().get(2);
-        File file4 = files().get(3);
-        File file5 = files().get(4);
+        File file1 = filesWithNumbering().get(0);
+        File file2 = filesWithNumbering().get(1);
+        File file3 = filesWithNumbering().get(2);
+        File file4 = filesWithNumbering().get(3);
+        File file5 = filesWithNumbering().get(4);
 
         assertEquals(Paths.get("D:\\ProjectData\\Test_rf\\test\\aya.txt").toFile(),
                 Util.renameByDeletingNumber(Paths.get(file1.getParent()).toFile(), file1.getName(),3));
@@ -49,20 +49,10 @@ class UtilTest {
 
     @Test
     void lengthOfSeparator() {
-        assertEquals(3, Util.lengthOfSeparator(files().get(0).getName(), 1));
-        assertEquals(1, Util.lengthOfSeparator(files().get(1).getName(), 1));
-        assertEquals(2, Util.lengthOfSeparator(files().get(2).getName(), 1));
-        assertEquals(0, Util.lengthOfSeparator(files().get(3).getName(), 0));
-        assertEquals(1, Util.lengthOfSeparator(files().get(4).getName(), 1));
-    }
-
-    private List<File> files() {
-        return List.of(
-                new File("D:\\ProjectData\\Test_rf\\test\\4 - aya.txt"),
-                new File("D:\\ProjectData\\Test_rf\\test\\2.s.png"),
-                new File("D:\\ProjectData\\Test_rf\\test\\3. txt.txt"),
-                new File("D:\\ProjectData\\Test_rf\\test\\aaa.txt"),
-                new File("D:\\ProjectData\\Test_rf\\test\\1 aaa.png")
-        );
+        assertEquals(3, Util.lengthOfSeparator(filesWithNumbering().get(0).getName(), 1));
+        assertEquals(1, Util.lengthOfSeparator(filesWithNumbering().get(1).getName(), 1));
+        assertEquals(2, Util.lengthOfSeparator(filesWithNumbering().get(2).getName(), 1));
+        assertEquals(0, Util.lengthOfSeparator(filesWithNumbering().get(3).getName(), 0));
+        assertEquals(1, Util.lengthOfSeparator(filesWithNumbering().get(4).getName(), 1));
     }
 }
