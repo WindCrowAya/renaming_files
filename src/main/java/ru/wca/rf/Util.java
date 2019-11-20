@@ -60,11 +60,7 @@ class Util {
      * @param number The number of zeros to add
      */
     private static String addZeros(int number) {
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < number; i++) {
-            result.append("0");
-        }
-        return result.toString();
+        return "0".repeat(number);
     }
 
     /**
@@ -241,7 +237,7 @@ class Util {
     private static boolean checkForSeparators(String fileName, int counter) {
         boolean hasSeparator = false;
         for (String separator : separators) {
-            if (hasSeparator = fileName.regionMatches(counter, separator, 0, separator.length())) { // assigning, not equals!!!
+            if (hasSeparator = fileName.regionMatches(counter, separator, 0, separator.length())) { // assigning, not equals!
                 break;
             }
         }
@@ -297,7 +293,7 @@ class Util {
     }
 
     /**
-     * Checks whether the file is a file. If so, checks whether this file has a separator.
+     * Checks whether the file is a file, not folder. If so, checks whether this file has a separator.
      *
      * @param file     File for checking
      * @param fileName File name

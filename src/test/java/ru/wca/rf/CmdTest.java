@@ -127,13 +127,11 @@ class CmdTest {
         return new File("D:\\ProjectData\\Test_rf\\" + folderName);
     }
 
-    private String[] filenames(File[] files) {  // TODO: 20.11.2019 Попробовать реализовать через стримы
-        String[] filenames = new String[files.length];
-        for (int i = 0; i < files.length; i++) {
-            filenames[i] = files[i].getName();
-        }
-        Arrays.sort(filenames);
-        return filenames;
+    private String[] filenames(File[] files) {
+        return Arrays.stream(files)
+                     .map(File::getName)
+                     .sorted()
+                     .toArray(String[]::new);
     }
 
     private void executeCommandDeleteNum(File folder, String[] extensions) {

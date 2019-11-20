@@ -27,7 +27,7 @@ import static ru.wca.rf.Util.*;
  * @author <a href="https://github.com/WindCrowAya">WindCrowAya</a>
  */
 
-public class RenamingService {
+class RenamingService {
     private static final Logger log = LoggerFactory.getLogger(RenamingService.class);
 
     /**
@@ -170,7 +170,7 @@ public class RenamingService {
      * @param numberOfZerosToFiles   The number of zeros added to the beginning of file numbering
      * @param numberOfZerosToFolders The number of zeros added to the beginning of folder numbering
      */
-    public static void executeCommandAll(File[] listFiles, File folder, int numberOfZerosToFiles, int numberOfZerosToFolders) {
+    static void executeCommandAll(File[] listFiles, File folder, int numberOfZerosToFiles, int numberOfZerosToFolders) {
         String fileToString,
                currentExtension;
         int countFilesWithAnyExtension = 0,
