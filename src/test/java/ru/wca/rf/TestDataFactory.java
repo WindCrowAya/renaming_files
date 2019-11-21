@@ -2,18 +2,19 @@ package ru.wca.rf;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 class TestDataFactory {
 
-    static List<File> filesWithNumbering() {
-        return List.of(
+    static File[] filesWithNumbering() {
+        return new File[] {
                 new File("D:\\ProjectData\\Test_rf\\test\\4 - aya.txt"),
                 new File("D:\\ProjectData\\Test_rf\\test\\2.s.png"),
                 new File("D:\\ProjectData\\Test_rf\\test\\3. txt.txt"),
                 new File("D:\\ProjectData\\Test_rf\\test\\aaa.txt"),
                 new File("D:\\ProjectData\\Test_rf\\test\\1 aaa.png")
-        );
+        };
     }
 
     static void createTestFiles() {
