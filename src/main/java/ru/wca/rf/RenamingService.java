@@ -64,8 +64,10 @@ class RenamingService {
             pathIsEmpty = isEmpty(path);
             if (pathIsEmpty) {
                 System.out.print(BLANK_QUERY);
+                log.warn("Path not entered!");
                 continue;
             }
+            log.debug("Path: \"{}\"", path);
 
             folder = new File(path);
             listFiles = folder.listFiles();
@@ -73,6 +75,7 @@ class RenamingService {
             listFilesIsEmpty = isEmptyArray(listFiles);
             if (listFilesIsEmpty) {
                 System.out.print(EMPTY_FOLDER_OR_WRONG_PATH);
+                log.warn("Empty folder or wrong path!");
                 continue;
             }
 
@@ -91,8 +94,10 @@ class RenamingService {
                 delPlusIsEnabled = true;
             } else {
                 System.out.print(WRONG_COMMAND);
+                log.warn("Wrong command \"{}\"!", command);
                 continue;
             }
+            log.debug("Command: {}", command);
 
             //if the entered command does not process all files, then we enter extensions of the necessary files
             if (!allIsEnabled && !defIsEnabled && !delPlusIsEnabled) {
@@ -102,6 +107,7 @@ class RenamingService {
                 stringOfExtensionsIsEmpty = isEmpty(stringOfExtensions);
                 if (stringOfExtensionsIsEmpty) {
                     System.out.print(BLANK_QUERY);
+                    log.warn("File extensions are not entered!");
                     continue;
                 }
 
@@ -113,12 +119,13 @@ class RenamingService {
 
                 if (extensions.length < 1) {
                     System.out.print(NO_EXTENSIONS_ENTERED);
+                    log.warn("No extensions entered!");
                 }
+                log.debug("Entered extensions: {}", Arrays.toString(extensions));
             } else {
                 stringOfExtensionsIsEmpty = false;
             }
         } while (pathIsEmpty || listFilesIsEmpty || stringOfExtensionsIsEmpty);
-
 
         //count the number of folders, files and zeros in front of them
         for (File file : listFiles) {
@@ -129,20 +136,24 @@ class RenamingService {
         numberOfFiles = listFiles.length - numberOfFolders;
         numberOfZerosToFolders = String.valueOf(numberOfFolders).length() - 1;
         numberOfZerosToFiles = String.valueOf(numberOfFiles).length() - 1;
-
+        log.debug("Folders: {}, Files: {}", numberOfFolders, numberOfFiles);
 
         //processing the selected command
         switch (command) {
             case ALL:
+                log.debug(START_EXECUTING_COMMAND + "ALL");
                 executeCommandAll(listFiles, folder, numberOfZerosToFiles, numberOfZerosToFolders);
                 break;
             case RENAME:
+                log.debug(START_EXECUTING_COMMAND + "RENAME");
                 executeCommandRename(listFiles, folder, numberOfZerosToFolders, extensions);
                 break;
             case ADD_NUM:
+                log.debug(START_EXECUTING_COMMAND + "ADD_NUM");
                 executeCommandAdd(listFiles, folder, numberOfZerosToFolders, extensions);
                 break;
             case DELETE_NUM:
+                log.debug(START_EXECUTING_COMMAND + "DELETE_NUM");
                 for (String ex : extensions) {
                     listFiles = folder.listFiles();
                     if (!FOLDERS.equals(ex)) {
@@ -153,14 +164,17 @@ class RenamingService {
                 }
                 break;
             case DELETE_ALL:
+                log.debug(START_EXECUTING_COMMAND + "DELETE_ALL");
                 executeCommandDel(true, true, listFiles, null, folder);
                 break;
             default:
+                log.debug(START_EXECUTING_COMMAND + "RENAME_ALL");
                 executeCommandRenameAll(listFiles, folder, numberOfZerosToFolders);
                 break;
             }
 
             System.out.println(RENAME_COMPLETED);
+            log.debug(RENAME_COMPLETED);
         }
 
     /**
