@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
+import static java.lang.Character.*;
 import static ru.wca.rf.Constants.*;
 import static ru.wca.rf.Util.*;
 
@@ -171,24 +172,24 @@ class RenamingService {
      * @param numberOfZerosToFolders The number of zeros added to the beginning of folder numbering
      */
     static void executeCommandAll(File[] listFiles, File folder, int numberOfZerosToFiles, int numberOfZerosToFolders) {
-        String fileToString,
-               currentExtension;
-        int countFilesWithAnyExtension = 0,
+        String fileStr,
+               currentEx;
+        int countFilesWithAnyEx = 0,
             numberOfZerosToFoldersTemp = numberOfZerosToFolders,  //Codacy: the change in the input parameter is undesirable; temp-variable is introduced
             countDirectories = 0;
 
         //pass through the file list
         for (File file : listFiles) {
             if (!file.isDirectory()) {
-                fileToString = file.toString();
-                currentExtension = fileToString.substring(fileToString.lastIndexOf(DOT) + 1);
+                fileStr = file.toString();
+                currentEx = fileStr.substring(fileStr.lastIndexOf(DOT) + 1);
                 file.renameTo(renameToNumbersFiles(
                         folder,
                         numberOfZerosToFiles = changeNumberOfZeros(
                                 numberOfZerosToFiles,
-                                countFilesWithAnyExtension),
-                        ++countFilesWithAnyExtension,
-                        currentExtension));
+                                countFilesWithAnyEx),
+                        ++countFilesWithAnyEx,
+                        currentEx));
             } else {
                 file.renameTo(renameToNumbersFolders(
                         folder,
@@ -209,9 +210,9 @@ class RenamingService {
      * @param extensions             Array of entered extensions
      */
     static void executeCommandRename(File[] listFiles, File folder, int numberOfZerosToFolders, String[] extensions) {
-        String fileToString,
-               currentExtension;
-        int countFilesWithCurrentExtension,
+        String fileStr,
+               currentEx;
+        int countFilesWithCurrentEx,
             numberOfZerosToFilesWithCurrentEx,
             numberOfZerosToFoldersTemp = numberOfZerosToFolders,  //Codacy: the change in the input parameter is undesirable; temp-variable is introduced
             countDirectories = 0;
@@ -222,19 +223,19 @@ class RenamingService {
         for (Map.Entry<String, Integer> ex : extensionsInDir.entrySet()) {
             numberOfZerosToFilesWithCurrentEx = String.valueOf(ex.getValue()).length() - 1;
             if (!ex.getKey().equals(FOLDERS)) {
-                countFilesWithCurrentExtension = 0;
+                countFilesWithCurrentEx = 0;
                 for (File file : listFiles) {
                     if (!file.isDirectory()) {
-                        fileToString = file.toString();
-                        currentExtension = fileToString.substring(fileToString.lastIndexOf(DOT) + 1);
-                        if (currentExtension.equals(ex.getKey())) {
+                        fileStr = file.toString();
+                        currentEx = fileStr.substring(fileStr.lastIndexOf(DOT) + 1);
+                        if (currentEx.equals(ex.getKey())) {
                             file.renameTo(renameToNumbersFiles(
                                     folder,
                                     numberOfZerosToFilesWithCurrentEx = changeNumberOfZeros(
                                             numberOfZerosToFilesWithCurrentEx,
-                                            countFilesWithCurrentExtension),
-                                    ++countFilesWithCurrentExtension,
-                                    currentExtension));
+                                            countFilesWithCurrentEx),
+                                    ++countFilesWithCurrentEx,
+                                    currentEx));
                         }
                     }
                 }
@@ -262,9 +263,9 @@ class RenamingService {
      * @param extensions             Array of entered extensions
      */
     static void executeCommandAdd(File[] listFiles, File folder, int numberOfZerosToFolders, String[] extensions) {
-        String fileToString,
-               currentExtension;
-        int countFilesWithCurrentExtension,
+        String fileStr,
+               currentEx;
+        int countFilesWithCurrentEx,
             numberOfZerosToFilesWithCurrentEx,
             numberOfZerosToFoldersTemp = numberOfZerosToFolders,  //Codacy: the change in the input parameter is undesirable; temp-variable is introduced
             countDirectories = 0;
@@ -275,18 +276,18 @@ class RenamingService {
         for (Map.Entry<String, Integer> ex : extensionsInDir.entrySet()) {
             numberOfZerosToFilesWithCurrentEx = String.valueOf(ex.getValue()).length() - 1;
             if (!ex.getKey().equals(FOLDERS)) {
-                countFilesWithCurrentExtension = 0;
+                countFilesWithCurrentEx = 0;
                 for (File file : listFiles) {
                     if (!file.isDirectory()) {
-                        fileToString = file.toString();
-                        currentExtension = fileToString.substring(fileToString.lastIndexOf(DOT) + 1);
-                        if (currentExtension.equals(ex.getKey())) {
+                        fileStr = file.toString();
+                        currentEx = fileStr.substring(fileStr.lastIndexOf(DOT) + 1);
+                        if (currentEx.equals(ex.getKey())) {
                             file.renameTo(renameByAddingNumber(
                                     folder,
                                     numberOfZerosToFilesWithCurrentEx = changeNumberOfZeros(
                                             numberOfZerosToFilesWithCurrentEx,
-                                            countFilesWithCurrentExtension),
-                                    ++countFilesWithCurrentExtension,
+                                            countFilesWithCurrentEx),
+                                    ++countFilesWithCurrentEx,
                                     file.getName()));
                         }
                     }
@@ -322,25 +323,22 @@ class RenamingService {
      * @param folder      Specified folder
      */
     static void executeCommandDel(boolean isItFolders, boolean isItFiles, File[] listFiles, String extension, File folder) {
-        String fileName,
-               fileNameWithoutEx,
-               fileToString;
-        char[] fileNameCharArray,
-               fileNameWithoutExCharArray;
+        String name,
+               fileStr;
+        char[] nameArr,
+               nameNoEx;
         boolean separatorIsFound = false,
                 numberIsFound = false;
 
         search:
         for (File file : listFiles) {
-            fileName = file.getName();
-            fileNameCharArray = fileName.toCharArray();
-            fileToString = file.toString();
+            name = file.getName();
+            nameArr = name.toCharArray();
             if (!file.isDirectory()) {
-                fileNameWithoutEx = fileName.substring(0, fileName.lastIndexOf(DOT)).trim();    //file name without extension
-                fileNameWithoutExCharArray = fileNameWithoutEx.toCharArray();
-                for (int i = 0; i < fileNameWithoutExCharArray.length; i++) {
-                    if (Character.isDigit(fileNameWithoutExCharArray[i])) {     //checks if there are numbers at the beginning of the file name
-                        if (i + 1 == fileNameWithoutExCharArray.length) {       //if the file name consists only of digits, then the digits will not be deleted
+                nameNoEx = name.substring(0, name.lastIndexOf(DOT)).trim().toCharArray(); //file name without extension
+                for (int i = 0; i < nameNoEx.length; i++) {
+                    if (isDigit(nameNoEx[i])) {             //checks if there are numbers at the beginning of the file name
+                        if (i + 1 == nameNoEx.length) {     //if the file name consists only of digits, then the digits will not be deleted
                             continue search;
                         }
                     } else {
@@ -348,9 +346,9 @@ class RenamingService {
                     }
                 }
             } else {
-                for (int i = 0; i < fileNameCharArray.length; i++) {
-                    if (Character.isDigit(fileNameCharArray[i])) {
-                        if (i + 1 == fileNameCharArray.length) {
+                for (int i = 0; i < nameArr.length; i++) {
+                    if (isDigit(nameArr[i])) {
+                        if (i + 1 == nameArr.length) {
                             continue search;
                         }
                     } else {
@@ -358,18 +356,19 @@ class RenamingService {
                     }
                 }
             }
-            if ((isItFiles && fileToString.substring(fileToString.lastIndexOf(DOT) + 1).equals(extension)) ||   //files only
-                (isItFiles && isItFolders) ||                                                                       //folders & files
-                (isItFolders && file.isDirectory())) {                                                              //folders only
-                for (int i = 0; !separatorIsFound; i++) {   //search for separator in the file name, if not, then stop search
-                    if (Character.isDigit(fileNameCharArray[i])) {
+            fileStr = file.toString();
+            if ((isItFiles && fileStr.substring(fileStr.lastIndexOf(DOT) + 1).equals(extension)) ||  //files only
+                (isItFiles && isItFolders) ||           //folders & files
+                (isItFolders && file.isDirectory())) {  //folders only
+                for (int i = 0; !separatorIsFound; i++) {  //search for separator in the file name, if not, then stop search
+                    if (isDigit(nameArr[i])) {
                         numberIsFound = true;
-                    } else if (numberIsFound && (checkFile(file, fileName, i) ||       //checking for the presence of a number to delete
-                                                 checkFolder(file, fileName, i))) {    //and for the presence of a separator
+                    } else if (numberIsFound && (checkFile(file, name, i) ||     //checking for the presence of a number to delete
+                                                 checkFolder(file, name, i))) {  //and for the presence of a separator
                         file.renameTo(renameByDeletingNumber(
                                 folder,
-                                fileName,
-                                (i - 1) + lengthOfSeparator(fileName, i)));  //(i - 1) is the pointer offset
+                                name,
+                                (i - 1) + lengthOfSeparator(name, i)));  //(i - 1) is the pointer offset
                         separatorIsFound = true;
                     } else {
                         break;
@@ -390,9 +389,9 @@ class RenamingService {
      * @param numberOfZerosToFolders The number of zeros added to the beginning of the folder numbering
      */
     static void executeCommandRenameAll(File[] listFiles, File folder, int numberOfZerosToFolders) {
-        String fileToString,
-               currentExtension;
-        int countFilesWithCurrentExtension,
+        String fileStr,
+               currentEx;
+        int countFilesWithCurrentEx,
             numberOfZerosToFilesWithCurrentEx,
             numberOfZerosToFoldersTemp = numberOfZerosToFolders,  //Codacy: the change in the input parameter is undesirable; temp-variable is introduced
             countDirectories = 0;
@@ -401,20 +400,20 @@ class RenamingService {
 
         //pass through the map, for each entered extension
         for (Map.Entry<String, Integer> ex : extensionsInDir.entrySet()) {
-            countFilesWithCurrentExtension = 0;
+            countFilesWithCurrentEx = 0;
             numberOfZerosToFilesWithCurrentEx = String.valueOf(ex.getValue()).length() - 1;
             for (File file : listFiles) {
                 if (!file.isDirectory()) {
-                    fileToString = file.toString();
-                    currentExtension = fileToString.substring(fileToString.lastIndexOf(DOT) + 1);
-                    if (currentExtension.equals(ex.getKey())) {
+                    fileStr = file.toString();
+                    currentEx = fileStr.substring(fileStr.lastIndexOf(DOT) + 1);
+                    if (currentEx.equals(ex.getKey())) {
                         file.renameTo(renameToNumbersFiles(
                                 folder,
                                 numberOfZerosToFilesWithCurrentEx = changeNumberOfZeros(
                                         numberOfZerosToFilesWithCurrentEx,
-                                        countFilesWithCurrentExtension),
-                                ++countFilesWithCurrentExtension,
-                                currentExtension));
+                                        countFilesWithCurrentEx),
+                                ++countFilesWithCurrentEx,
+                                currentEx));
                     }
                 } else {
                     file.renameTo(renameToNumbersFolders(
