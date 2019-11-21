@@ -16,21 +16,6 @@ class TestDataFactory {
         );
     }
 
-    static List<File> tenFilesWithNumbering() {
-        return List.of(
-                new File("D:\\ProjectData\\Test_rf\\test\\file0.txt"),
-                new File("D:\\ProjectData\\Test_rf\\test\\file1.txt"),
-                new File("D:\\ProjectData\\Test_rf\\test\\file2.txt"),
-                new File("D:\\ProjectData\\Test_rf\\test\\file3.txt"),
-                new File("D:\\ProjectData\\Test_rf\\test\\file4.txt"),
-                new File("D:\\ProjectData\\Test_rf\\test\\file5.txt"),
-                new File("D:\\ProjectData\\Test_rf\\test\\file6.txt"),
-                new File("D:\\ProjectData\\Test_rf\\test\\file7.txt"),
-                new File("D:\\ProjectData\\Test_rf\\test\\file8.txt"),
-                new File("D:\\ProjectData\\Test_rf\\test\\file9.txt")
-        );
-    }
-
     static void createTestFiles() {
         new File("D:\\ProjectData\\Test_rf\\test\\folder1").mkdir();
         new File("D:\\ProjectData\\Test_rf\\test\\2 folder").mkdir();

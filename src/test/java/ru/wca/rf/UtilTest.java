@@ -8,7 +8,6 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static ru.wca.rf.TestDataFactory.filesWithNumbering;
-import static ru.wca.rf.TestDataFactory.tenFilesWithNumbering;
 
 class UtilTest {
 
@@ -56,18 +55,18 @@ class UtilTest {
 
     @Test
     void renameByAddingNumber_moreTenFiles() {
-        File[] files = tenFilesWithNumbering().toArray(File[]::new);
+        File[] files = filesWithNumbering().toArray(File[]::new);
         Arrays.sort(files);
 
-        assertEquals(Paths.get("D:\\ProjectData\\Test_rf\\test\\01 file0.txt").toFile(),
+        assertEquals(Paths.get("D:\\ProjectData\\Test_rf\\test\\01 1 aaa.png").toFile(),
                 Util.renameByAddingNumber(Paths.get(files[0].getParent()).toFile(),
                         1, 1, files[0].getName()));
-        assertEquals(Paths.get("D:\\ProjectData\\Test_rf\\test\\02 file1.txt").toFile(),
+        assertEquals(Paths.get("D:\\ProjectData\\Test_rf\\test\\02 2.s.png").toFile(),
                 Util.renameByAddingNumber(Paths.get(files[1].getParent()).toFile(),
                         1,2, files[1].getName()));
-        assertEquals(Paths.get("D:\\ProjectData\\Test_rf\\test\\10 file9.txt").toFile(),
-                Util.renameByAddingNumber(Paths.get(files[9].getParent()).toFile(),
-                        0,10, files[9].getName()));
+        assertEquals(Paths.get("D:\\ProjectData\\Test_rf\\test\\10 3. txt.txt").toFile(),
+                Util.renameByAddingNumber(Paths.get(files[2].getParent()).toFile(),
+                        0,10, files[2].getName()));
     }
 
     @Test
